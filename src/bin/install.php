@@ -1,5 +1,11 @@
 <?php
 /* Copyright (c) 2016 Stefan Hecken <stefan.hecken@concepts-and-training.de>, Extended GPL, see LICENSE */
+$home = getenv("HOME");
+
+if(!file_exists($home . "/.ilias_installer/"))
+{
+	mkdir($home . "/.ilias_installer");
+}
 
 $config_path = $argv[1];
 $no_interaction = isset($argv[2]) ? $argv[2] : null;
