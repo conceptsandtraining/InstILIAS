@@ -39,7 +39,7 @@ class ConfigCommand extends BaseCommand
 		$config_names = $in->getArgument("config_names");
 		$args["config"] = $this->merge($config_names);
 
-		$this->config($args);
+		$this->conf($args);
 		$out->writeln("\t\t\t\tDone!");
 	}
 
@@ -48,9 +48,9 @@ class ConfigCommand extends BaseCommand
 	 *
 	 * @param ["param_name" => param_value] 	$args
 	 */
-	protected function config(array $args)
+	protected function conf(array $args)
 	{
-		$ci = new Executer\ConfigurateILIAS($args['config'], $this->checker, $this->git);
+		$ci = new Executer\ConfigurateILIAS($args['config'], $this->checker, $this->git, $this->path);
 		$ci->run();
 	}
 }

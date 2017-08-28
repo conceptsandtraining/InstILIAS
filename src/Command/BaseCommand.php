@@ -7,6 +7,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use CaT\Ilse\App;
+use CaT\Ilse\Executer;
 
 /**
  * Base class for all commands
@@ -38,7 +39,7 @@ abstract class BaseCommand extends Command
 	 */
 	protected $git;
 
-	public function __construct(\CaT\Ilse\Interfaces\CommonPathes $path,
+	public function __construct(\CaT\Ilse\Interfaces\Pathes $path,
 								\CaT\Ilse\Interfaces\Merger $merger,
 								\CaT\Ilse\Interfaces\RequirementChecker $checker,
 								\CaT\Ilse\Interfaces\Git $git,
@@ -51,6 +52,53 @@ abstract class BaseCommand extends Command
 		$this->checker 	= $checker;
 		$this->git 		= $git;
 		$this->repos 	= $repos;
+	}
+
+	/**
+	 * Configurate the ILIAS environment
+	 *
+	 * @param string 		$cmd
+	 */
+	protected function config($cmd)
+	{
+		assert('is_string($cmd)');
+
+		// A hack to avoid an ilLanguage error.
+		// It runs config in an seperate process.
+		$this->process->setCommandLine($cmd);
+		$this->process->setTty(true);
+		$this->process->run();
+	}
+
+	/**
+	 * Setup the environment
+	 *
+	 * @param ["param_name" => param_value] 	$args
+	 */
+	protected function setup(array $args)
+	{
+		$sp = new Executer\SetupEnvironment($args['config'], $this->checker, $this->git, $args['interactive'], $this->path);
+		$sp->run();
+	}
+
+	/**
+	 * Start the installation process
+	 *
+	 * @param ["param_name" => param_value] 	$args
+	 */
+	protected function start(array $args)
+	{
+		$ii = new Executer\InstallILIAS($args['config'], $this->checker, $this->git, $this->path);
+		$ii->run();
+	}
+
+	/**
+	 * Delete an ILIAS-Environment
+	 */
+	protected function delete(array $args)
+	{
+		$ri = new Executer\DeleteILIAS($args['config'], $this->checker, $this->git, $this->path);
+		$ri->run($args['all']);
 	}
 
 	/**

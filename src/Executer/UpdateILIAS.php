@@ -38,11 +38,15 @@ class UpdateILIAS extends BaseExecuter
 	 * @param string 									$config
 	 * @param \CaT\Ilse\Interfaces\RequirementChecker 	$checker
 	 * @param \CaT\Ilse\Interfaces\Git 					$git
+	 * @param \CaT\Ilse\Interfaces\Pathes 		$path
 	 */
-	public function __construct($config, \CaT\Ilse\Interfaces\RequirementChecker $checker, \CaT\Ilse\Interfaces\Git $git)
+	public function __construct($config,
+								\CaT\Ilse\Interfaces\RequirementChecker $checker,
+								\CaT\Ilse\Interfaces\Git $git,
+								\CaT\Ilse\Interfaces\Pathes $path)
 	{
 		assert('is_string($config)');
-		parent::__construct($config, $checker, $git);
+		parent::__construct($config, $checker, $git, $path);
 
 		chdir($this->absolute_path);
 		if(file_exists($this->absolute_path.'/libs/composer/vendor/autoload.php'))

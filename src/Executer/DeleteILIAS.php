@@ -19,11 +19,15 @@ class DeleteILIAS extends BaseExecuter
 	 * @param string 									$config
 	 * @param \CaT\Ilse\Interfaces\RequirementChecker 	$checker
 	 * @param \CaT\Ilse\Interfaces\Git 					$git
+	 * @param \CaT\Ilse\Interfaces\Pathes 		$path
 	 */
-	public function __construct($config, \CaT\Ilse\Interfaces\RequirementChecker $checker, \CaT\Ilse\Interfaces\Git $git)
+	public function __construct($config,
+								\CaT\Ilse\Interfaces\RequirementChecker $checker,
+								\CaT\Ilse\Interfaces\Git $git,
+								\CaT\Ilse\Interfaces\Pathes $path)
 	{
 		assert('is_string($config)');
-		parent::__construct($config, $checker, $git);
+		parent::__construct($config, $checker, $git, $path);
 	}
 
 	/**
@@ -56,7 +60,7 @@ class DeleteILIAS extends BaseExecuter
 		$passwd = $this->gc->database()->password();
 
 		$this->con = new \mysqli($host, $user, $passwd);
-		echo "\t\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
 	}
 
 	/**
@@ -72,7 +76,7 @@ class DeleteILIAS extends BaseExecuter
 				throw new Exception("Database could not be deleted. (Error: )");
 			}
 		}
-		echo "\t\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
 	}
 
 	/**
@@ -81,7 +85,7 @@ class DeleteILIAS extends BaseExecuter
 	protected function deleteILIASFolder() {
 		echo "Deleting ILIAS files...";
 		$this->clearDirectory($this->gc->server()->absolutePath());
-		echo "\t\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
 	}
 
 	/**
@@ -90,7 +94,7 @@ class DeleteILIAS extends BaseExecuter
 	protected function deleteClientFolder() {
 		echo "Deleting client folder...";
 		$this->clearDirectory($this->gc->client()->dataDir()."/".$this->gc->client()->name());
-		echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\tDone!\n";
 	}
 
 	/**
@@ -99,7 +103,7 @@ class DeleteILIAS extends BaseExecuter
 	protected function deleteDataFolder() {
 		echo "Deleting data folder...";
 		$this->clearDirectory($this->gc->client()->dataDir());
-		echo "\t\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
 	}
 
 	/**
@@ -108,7 +112,7 @@ class DeleteILIAS extends BaseExecuter
 	protected function deleteErrorLog() {
 		echo "Deleteing error_log folder...";
 		$this->clearDirectory($this->gc->log()->error_log());
-		echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\tDone!\n";
 	}
 
 	/**
