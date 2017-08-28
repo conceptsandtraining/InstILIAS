@@ -12,7 +12,7 @@ error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED & ~E_NOTICE && ~E_WARNING);
 
 $checker 	= new \CaT\Ilse\IliasRequirementChecker();
 $merger 	= new \CaT\Ilse\MergeConfigs();
-$path 		= new \CaT\Ilse\CommonPathes();
+$path 		= new \CaT\Ilse\Pathes();
 $git 		= new \CaT\Ilse\GitExecuter();
 $parser 	= new \CaT\Ilse\YamlParser();
 $gw 		= new \CaT\Ilse\GitWrapper\GitWrapper();

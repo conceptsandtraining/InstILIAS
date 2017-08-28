@@ -17,7 +17,7 @@ class App extends Application
 	const I_R_BRANCH			= "master";
 	const I_D_WEB_DIR			= "data";
 
-	public function __construct(Interfaces\CommonPathes $path,
+	public function __construct(Interfaces\Pathes $path,
 								Interfaces\Merger $merger,
 								Interfaces\RequirementChecker $checker,
 								Interfaces\Git $git,
@@ -38,13 +38,13 @@ class App extends Application
 	/**
 	 * Initialize all commands, and add them to the app
 	 *
-	 * @param Interfaces\CommonPathes 			$path
+	 * @param Interfaces\Pathes 				$path
 	 * @param Interfaces\Merger 				$merger
 	 * @param Interfaces\RequirementChecker 	$checker
 	 * @param Interfaces\Git 					$git
 	 * @param string[] 							$repos
 	 */
-	protected function initCommands(Interfaces\CommonPathes $path,
+	protected function initCommands(Interfaces\Pathes $path,
 									Interfaces\Merger $merger,
 									Interfaces\RequirementChecker $checker,
 									Interfaces\Git $git,
@@ -61,12 +61,10 @@ class App extends Application
 	/**
 	 * Checks whether the app folder exists otherwise create one
 	 *
-	 * @param string 		$path
+	 * @param Interfaces\Pathes 		$path
 	 */
-	protected function initAppFolder($path)
+	protected function initAppFolder(Interfaces\Pathes $path)
 	{
-		assert('is_string($path)');
-
 		if(!is_dir($path->getHomeDir() . "/" . self::I_P_GLOBAL))
 		{
 			mkdir($path->getHomeDir() . "/" . self::I_P_GLOBAL, 0755);
