@@ -23,15 +23,18 @@ $ composer install
 
 ### Configuration
 The Ilias-installer relies on a github-repository as the source of configuration files.  
+There can be 1 - n repo-paths in the `config_repos.yaml`.  
 The corresponding repo-paths should be specified in `$HOMEDIR/.ilse/config_repos.yaml`.  
-Please refer to `config_repos_default.yaml` for the required layout.
+If the folder `$HOMEDIR/.ilse` doesn´t exists yet, create it first.  
+Please refer to `config_repos_default.yaml` for the required layout.  
+
    
 The name of the config file is always `ilse_config.yaml`.  
-Each config file is inside a directory that represents the customomer name.  
+Each config file is inside a directory that represents the customer name.  
 
-* Edit the file src/default.yaml
+* Edit the file src/default_config.yaml
 * Save the file as ilse_config.yaml
-* Push the file into the destination folder of the repo named above.
+* Push the file into the destination folder of the repo named above or store it localy.
 
 
 ### Required configuration entries
@@ -46,6 +49,9 @@ For new installation of ILIAS you need these configuration entries.
 * log
 * git_branch
 ```
+### All commands
+Each command needs 1 - n `$REPO_FOLDER_NAME`. This can be local or a remote folders.  
+All specified `$REPO_FOLDER_NAMES` will be merged automaticly. The order of the `$REPO_FOLDER_NAMES` in the commandline will be decisive. First named `$REPO_FOLDER_NAMES` will be overwritten by last ones.
 
 ### Re- / Installation of ILIAS
 With ilse it´s possible to install a new ILIAS or drop your old an install in one step.
@@ -71,6 +77,8 @@ With the option -a ilse will also delete all log files and the whole data folder
 $ ./ilse.php update $REPO_FOLDER_NAMES
 ```
 ##### Update plugins
+This command also delete plugins that don´t exist in the config files.
+ 
 ```
 $ ./ilse.php updateplugins $REPO_FOLDER_NAMES
 ```
