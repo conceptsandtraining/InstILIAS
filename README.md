@@ -54,9 +54,9 @@ Each command needs 1 - n `$REPO_FOLDER_NAME`. This can be local or a remote fold
 All specified `$REPO_FOLDER_NAMES` will be merged automaticly. The order of the `$REPO_FOLDER_NAMES` in the commandline will be decisive. First named `$REPO_FOLDER_NAMES` will be overwritten by last ones.
 
 ### Re- / Installation of ILIAS
-With ilse it´s possible to install a new ILIAS or drop your old an install in one step.
-For both it is possible to run the installation in a non interactiv mode.
-If you would use this, just add the parameter -i in your command.
+With ilse it´s possible to install a new ILIAS or drop your old an install in one step.  
+For both it is possible to run the installation in a non interactiv mode.  
+If you would use this, just add the parameter -i in your command.  
 
 ##### Installation
 ```
