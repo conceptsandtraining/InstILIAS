@@ -55,9 +55,11 @@ abstract class BaseCommand extends Command
 	}
 
 	/**
-	 * Configurate the ILIAS environment
+	 * Configure the ILIAS environment
 	 *
 	 * @param string 		$cmd
+	 *
+	 * @return void
 	 */
 	protected function config($cmd)
 	{
@@ -74,6 +76,8 @@ abstract class BaseCommand extends Command
 	 * Setup the environment
 	 *
 	 * @param ["param_name" => param_value] 	$args
+	 *
+	 * @return void
 	 */
 	protected function setup(array $args)
 	{
@@ -85,6 +89,8 @@ abstract class BaseCommand extends Command
 	 * Start the installation process
 	 *
 	 * @param ["param_name" => param_value] 	$args
+	 *
+	 * @return void
 	 */
 	protected function start(array $args)
 	{
@@ -94,6 +100,8 @@ abstract class BaseCommand extends Command
 
 	/**
 	 * Delete an ILIAS-Environment
+	 *
+	 * @return void
 	 */
 	protected function delete(array $args)
 	{
@@ -105,6 +113,8 @@ abstract class BaseCommand extends Command
 	 * Match subdirectory
 	 *
 	 * @param string 	$name
+	 *
+	 * @return string|null
 	 */
 	protected function searchSubDir($name)
 	{
@@ -118,12 +128,15 @@ abstract class BaseCommand extends Command
 				return $dir . "/" . App::I_F_CONFIG;
 			}
 		}
+		return null;
 	}
 
 	/**
 	 * Merge all given configs
 	 *
 	 * @param string[]
+	 *
+	 * @return array
 	 */
 	protected function merge(array $configs)
 	{
