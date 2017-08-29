@@ -28,7 +28,7 @@ class Pathes implements Interfaces\Pathes
 	/**
 	 * @inheritdoc
 	 */
-	public function convertTilde($path)
+	public function expandHomeFolder($path)
 	{
 		if(strpos($path, '~') !== 0)
 		{
