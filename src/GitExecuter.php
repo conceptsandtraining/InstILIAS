@@ -2,7 +2,7 @@
 /* Copyright (c) 2016 Stefan Hecken <stefan.hecken@concepts-and-training.de>, Extended GPL, see LICENSE */
 
 namespace CaT\Ilse;
-use CaT\Ilse\GitWrapper\GitWrapper;
+use CaT\Ilse\Git\GitWrapper;
 /**
  * Implementation of the git interface.
  *
@@ -36,9 +36,10 @@ class GitExecutor implements \CaT\Ilse\Interfaces\Git
 			$git->gitCheckout($git_branch, false);
 			$git->gitPull("origin", $git_branch);
 		} else {
-			$git->gitClone();;
+			$git->gitClone();
 		}
 		chdir($cur_dir);
+
 		return true;
 	}
 }

@@ -1,8 +1,13 @@
 <?php
 
+require_once(__DIR__."/ConfigTestHelper.php");
+
 use \CaT\Ilse\Config\LDAP;
+use \CaT\Ilse\Config\LDAPMappings;
 
 class LDAPConfigTest extends PHPUnit_Framework_TestCase{
+	use ConfigTestHelper;
+
 	public function test_not_enough_params() {
 		try {
 			$config = new LDAP();
@@ -15,23 +20,23 @@ class LDAPConfigTest extends PHPUnit_Framework_TestCase{
 	 * @dataProvider	LDAPConfigValueProvider
 	 */
 	public function test_LDAPConfig($name, $server, $basedn, $conType, $conUserDn, $conUserPw, $sync_on_login
-									, $sync_per_cron, $atrNameUser, $protocolVersion, $userSearchScope, $registerRoleName, $valid) 
+									, $sync_per_cron, $userGroup, $attrNameUser, $protocolVersion, $userSearchScope, $registerRoleName, $mappings, $valid) 
 	{
 		if ($valid) {
 			$this->_test_valid_LDAPConfig($name, $server, $basedn, $conType, $conUserDn, $conUserPw, $sync_on_login
-										, $sync_per_cron, $atrNameUser, $protocolVersion, $userSearchScope, $registerRoleName);
+										, $sync_per_cron, $userGroup, $attrNameUser, $protocolVersion, $userSearchScope, $registerRoleName, $mappings);
 		}
 		else {
 			$this->_test_invalid_LDAPConfig($name, $server, $basedn, $conType, $conUserDn, $conUserPw, $sync_on_login
-										, $sync_per_cron, $atrNameUser, $protocolVersion, $userSearchScope, $registerRoleName);
+										, $sync_per_cron, $userGroup, $attrNameUser, $protocolVersion, $userSearchScope, $registerRoleName, $mappings);
 		}
 	}
 
 	public function _test_valid_LDAPConfig($name, $server, $basedn, $conType, $conUserDn, $conUserPw, $sync_on_login
-											, $sync_per_cron, $atrNameUser, $protocolVersion, $userSearchScope, $registerRoleName) 
+											, $sync_per_cron, $userGroup, $attrNameUser, $protocolVersion, $userSearchScope, $registerRoleName, $mappings) 
 	{
-		$config = new LDAP($name, $server, $basedn, $conType, $conUserDn, $conUserPw, $sync_on_login, $sync_per_cron, "", $atrNameUser
-							, $protocolVersion, $userSearchScope, $registerRoleName);
+		$config = new LDAP($name, $server, $basedn, $conType, $conUserDn, $conUserPw, $sync_on_login, $sync_per_cron, $userGroup, $attrNameUser
+							, $protocolVersion, $userSearchScope, $registerRoleName, $mappings);
 		$this->assertEquals($name, $config->name());
 		$this->assertEquals($basedn, $config->basedn());
 		$this->assertEquals($conType, $config->conType());
@@ -39,66 +44,42 @@ class LDAPConfigTest extends PHPUnit_Framework_TestCase{
 		$this->assertEquals($conUserPw, $config->conUserPw());
 		$this->assertEquals($sync_on_login, $config->syncOnLogin());
 		$this->assertEquals($sync_per_cron, $config->syncPerCron());
-		$this->assertEquals("", $config->userGroup());
-		$this->assertEquals($atrNameUser, $config->attrNameUser());
+		$this->assertEquals($userGroup, $config->userGroup());
+		$this->assertEquals($attrNameUser, $config->attrNameUser());
 		$this->assertEquals($protocolVersion, $config->protocolVersion());
 		$this->assertEquals($userSearchScope, $config->userSearchScope());
 		$this->assertEquals($registerRoleName, $config->registerRoleName());
+		$this->assertEquals($mappings, $config->mappings());
 	}
 
 	public function _test_invalid_LDAPConfig($name, $server, $basedn, $conType, $conUserDn, $conUserPw, $sync_on_login
-											, $sync_per_cron, $atrNameUser, $protocolVersion, $userSearchScope, $registerRoleName)
+											, $sync_per_cron, $userGroup, $attrNameUser, $protocolVersion, $userSearchScope, $registerRoleName, $mappings)
 	{
 		try {
-			$config = new LDAP($name, $server, $basedn, $conType, $conUserDn, $conUserPw, $sync_on_login, $sync_per_cron, "", $atrNameUser
-								, $protocolVersion, $userSearchScope, $registerRoleName);
+			$config = new LDAP($name, $server, $basedn, $conType, $conUserDn, $conUserPw, $sync_on_login, $sync_per_cron, $userGroup, $attrNameUser
+								, $protocolVersion, $userSearchScope, $registerRoleName, $mappings);
 			$this->assertFalse("Should have raised.");
 		}
 		catch (\InvalidArgumentException $e) {}
 	}
 
 	public function LDAPConfigValueProvider() {
-		$ret = array();
-		$take_it = 0;
-		$take_every_Xth = 75000;
-		foreach ($this->nameProvider() as $name) {
-			foreach ($this->serverProvider() as $server) {
-				foreach ($this->basednProvider() as $basedn) {
-					foreach ($this->conTypeProvider() as $conType) {
-						foreach ($this->conUserDnProvider() as $conUserDn) {
-							foreach ($this->conUserPwProvider() as $conUserPw) {
-								foreach ($this->syncOnLoginProvider() as $sync_on_login) {
-									foreach ($this->syncPerCronProvider() as $sync_per_cron) {
-										foreach ($this->attrNameUserProvider() as $atrNameUser) {
-											foreach ($this->protocolVersionProvider() as $protocolVersion) {
-												foreach ($this->userSearchScopeProvider() as $userSearchScope) {
-													foreach ($this->registerRoleNameProvider() as $registerRoleName) {
-														$take_it++;
-														if($take_it == $take_every_Xth) {
-															$ret[] = array
-																( $name[0], $server[0], $basedn[0], $conType[0], $conUserDn[0], $conUserPw[0]
-																	, $sync_on_login[0], $sync_per_cron, $atrNameUser[0], $protocolVersion[0], $userSearchScope[0]
-																	, $registerRoleName[0]
-																, $name[1] && $server[1] && $basedn[1] && $conType[1] && $conUserDn[1] 
-																  && $conUserPw[1] && $sync_on_login[1] && $sync_per_cron && $atrNameUser[1] && $protocolVersion[1]
-																  && $userSearchScope[1] && $registerRoleName[1]);
-
-															$take_it = 0;
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return $ret;
+		return $this->buildProviderCombinations(
+			[ "nameProvider"
+			, "serverProvider"
+			, "basednProvider"
+			, "conTypeProvider"
+			, "conUserDnProvider"
+			, "conUserPwProvider"
+			, "syncOnLoginProvider"
+			, "syncPerCronProvider"
+			, "userGroupProvider"
+			, "attrNameUserProvider"
+			, "protocolVersionProvider"
+			, "userSearchScopeProvider"
+			, "registerRoleNameProvider"
+			, "mappingsProvider"
+			]); 
 	}
 
 	public function nameProvider() {
@@ -119,7 +100,7 @@ class LDAPConfigTest extends PHPUnit_Framework_TestCase{
 			);
 	}
 
-		public function basednProvider() {
+	public function basednProvider() {
 		return array(
 				array("cn=user,dc=dvdom,dc=local", true)
 				, array(2, false)
@@ -176,6 +157,15 @@ class LDAPConfigTest extends PHPUnit_Framework_TestCase{
 			);
 	}
 
+	public function userGroupProvider() {
+		return array(
+				array("benutzer", true)
+				, array(true, false)
+				, array(1, false)
+				, array(array(), false)
+			);
+	}
+
 	public function attrNameUserProvider() {
 		return array(
 				array("sAMAccountName", true)
@@ -211,6 +201,30 @@ class LDAPConfigTest extends PHPUnit_Framework_TestCase{
 				, array(2, false)
 				, array(true, false)
 				, array(array(), false)
+			);
+	}
+
+	public function mappingsProvider() {
+		return array(
+				array( new LDAPMappings
+					( "firstname"
+					, "lastname"
+					, "department"
+					, "email"
+					, "fax"
+					, "gender"
+					, "hobby"
+					, "institution"
+					, "matriculation"
+					, "phone_home"
+					, "phone_mobile"
+					, "phone_office"
+					, "street"
+					, "title"
+					, "zipcode"
+					, "city"
+					, "country"
+					), true)
 			);
 	}
 }

@@ -128,11 +128,11 @@ abstract class Base {
 			$ok = $value instanceof $type;
 		}
 
-		if ($ok && !is_array($type)) {
+		if ($ok and $key !== null) {
 			$ok = $this->checkValueContent($key, $value);
 		}
 
-		if (!$ok && !$optional) {
+		if (!$ok) {
 			throw new \InvalidArgumentException
 						( "Error in field $key: Expected "
 						. print_r($type, true)." found ".print_r($value, true));
@@ -156,8 +156,8 @@ abstract class Base {
 			return false;
 		}
 		else {
-			if(empty($value)){
-				return false;
+			if(count($value) == 0){
+				return true;
 			} else {
 				try {
 					// TODO: This is not very nice. I introduced $key to make
@@ -165,7 +165,7 @@ abstract class Base {
 					// checks on input values, but i would call checkValue with a
 					// specific key with array($type) and $type as well.
 					foreach ($value as $v) {
-						$this->checkValue($key, $content, $v, $optional);
+						$this->checkValue(null, $content, $v, $optional);
 					}
 					return true;
 				}
@@ -190,6 +190,8 @@ abstract class Base {
 
 	/**
 	 * is value in array
+	 *
+	 * TODO: remove this and just use "in_array"
 	 *
 	 * @param string|int 	$value 		entered value
 	 * @param array 		$valids		valid entries for the key

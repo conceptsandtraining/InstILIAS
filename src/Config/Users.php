@@ -54,7 +54,12 @@ class Users extends Base {
 	protected function checkValueContent($key, $value) {
 		switch($key) {
 			case "required_fields":
-				return empty($value) || $this->checkContentValueInArray($value, self::$valid_required_fields);
+				foreach ($value as $field) {
+					if (!$this->checkContentValueInArray($field, self::$valid_required_fields)) {
+						return false;
+					}
+				}
+				return true;
 			default:
 				return parent::checkValueContent($key, $value);
 		}

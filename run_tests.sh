@@ -1,3 +1,3 @@
 #!/bin/sh
 
-phpunit --bootstrap=vendor/autoload.php tests/MergeConfigsTest.php
+phpunit --bootstrap=vendor/autoload.php tests $@

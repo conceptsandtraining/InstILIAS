@@ -40,10 +40,9 @@ log:
     path: /path
     file_name: ilias.log
     error_log: /path
-git_branch:
+git:
     url: https://github.com/ILIAS-eLearning/ILIAS.git
     branch: release_5-1
-    hash: 
 category:
     categories:
         0:
@@ -112,8 +111,8 @@ plugin:
                 branch: master
 https_auto_detect:
     enabled: 0
-    header_name:
-    header_value:
+    header_name: X-FORWARDED-SCHEME
+    header_value: https
 orgunit_type:
     orgunit_types:
         0:

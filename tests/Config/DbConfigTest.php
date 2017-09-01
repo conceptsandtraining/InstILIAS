@@ -1,8 +1,12 @@
 <?php
 
+require_once(__DIR__."/ConfigTestHelper.php");
+
 use \CaT\Ilse\Config\DB;
 
 class DbConfigTest extends PHPUnit_Framework_TestCase {
+	use ConfigTestHelper;
+
 	public function test_not_enough_params() {
 		try {
 			$config = new DB();
@@ -42,31 +46,15 @@ class DbConfigTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function DBConfigValueProvider() {
-		$ret = array();
-		$take_it = 0;
-		$take_every_Xth = 10;
-		foreach ($this->hostProvider() as $host) {
-			foreach ($this->databaseProvider() as $database) {
-				foreach ($this->userProvider() as $user) {
-					foreach ($this->passwordProvider() as $password) {
-						foreach ($this->engineProvider() as $engine) {
-							foreach ($this->encodingProvider() as $encoding) {
-								foreach ($this->createDbProvider() as $create_db) {
-									$take_it++;
-									if (($take_it % $take_every_Xth) != 0) {
-										continue;
-									}
-									$ret[] = array
-										( $host[0], $database[0], $user[0], $password[0], $engine[0], $encoding[0], $create_db[0]
-										, $host[1] && $database[1] && $user[1] && $password[1] && $engine[1] && $encoding[1] && $create_db[1]);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return $ret;
+		return $this->buildProviderCombinations(
+			[ "hostProvider"
+			, "databaseProvider"
+			, "userProvider"
+			, "passwordProvider"
+			, "engineProvider"
+			, "encodingProvider"
+			, "createDbProvider"
+			]);
 	}
 
 	public function hostProvider() {

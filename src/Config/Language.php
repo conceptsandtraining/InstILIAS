@@ -58,6 +58,15 @@ class Language extends Base {
 	protected function checkValueContent($key, $value) {
 		switch($key) {
 			case "available":
+				if (count($value) == 0) {
+					return false;
+				}
+				foreach ($value as $lang) {
+					if (!$this->checkContentValueInArray($lang, self::$valid_languages)) {
+						return false;
+					}
+				}
+				return true;
 			case "default":
 				return $this->checkContentValueInArray($value, self::$valid_languages);
 			default:

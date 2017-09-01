@@ -1,10 +1,16 @@
 <?php
-namespace CaT\Ilse\GitWrapper;
+
+/* Copyright (c) 2017 Daniel Weise <daniel.weise@concepts-and-training.de>, Richard Klees <richard.klees@concepts-and-training.de>, Extended GPL, see LICENSE */
+
+namespace CaT\Ilse\Git;
 
 /**
  * Wrapper for git commands
+ *
+ * TODO: remove that `git`-prefix: gitClone -> clone...
  * 
  * @author Daniel Weise <daniel.weise@concepts-and-training.de>
+ * @author Richard Klees <richard.klees@concepts-and-training.de>
  */
 interface Git
 {
@@ -12,7 +18,7 @@ interface Git
 		 * Clone a repository by a given URL
 		 *
 		 * @throws Exception
-		 * @return boolean
+		 * @return void
 		 */
 		public function gitClone();
 
@@ -23,9 +29,9 @@ interface Git
 		 * @param boolean   $new
 		 *
 		 * @throws Exception
-		 * @return boolean
+		 * @return void
 		 */
-		public function gitCheckOut($branch, $new);
+		public function gitCheckOut($branch, $new = false);
 
 		/**
 		 * Pull a repo
@@ -34,9 +40,9 @@ interface Git
 		 * @param string    $branch
 		 *
 		 * @throws Exception
-		 * @return boolean
+		 * @return void
 		 */
-		public function gitPull($remote, $branch);
+		public function gitPull($branch);
 
 		/**
 		 * Fetch a repo
@@ -44,7 +50,7 @@ interface Git
 		 * @param string    $remote
 		 *
 		 * @throws Exception
-		 * @return boolean
+		 * @return void
 		 */
-		public function gitFetch($remote);
+		public function gitFetch();
 }

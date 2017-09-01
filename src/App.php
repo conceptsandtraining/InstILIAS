@@ -22,7 +22,7 @@ class App extends Application
 								Interfaces\RequirementChecker $checker,
 								Interfaces\Git $git,
 								Interfaces\Parser $parser,
-								GitWrapper\Git $gw)
+								Git\Git $gw)
 	{
 		parent::__construct();
 
@@ -54,6 +54,7 @@ class App extends Application
 		$this->add(new Command\ReinstallCommand($path, $merger, $checker, $git, $repos));
 		$this->add(new Command\InstallCommand($path, $merger, $checker, $git, $repos));
 		$this->add(new Command\ConfigCommand($path, $merger, $checker, $git, $repos));
+		$this->add(new Command\ExampleConfigCommand());
 	}
 
 	/**
@@ -73,7 +74,7 @@ class App extends Application
 	 * Initialize the config repo in ~/.ilias-installer/config
 	 *
 	 * @param string 				$path
-	 * @param GitWrapper\Git 		$gw
+	 * @param Git\Git 		$gw
 	 * @param Interfaces\Parser 	$parser
 	 * @param string 				$repos
 	 * @param GitExecutor 			$ge
@@ -123,12 +124,12 @@ class App extends Application
 	 * Get the config repos
 	 *
 	 * @param string 				$path
-	 * @param GitWrapper\Git 		$gw
+	 * @param Git\Git 		$gw
 	 * @param Interfaces\Parser 	$parser
 	 *
 	 * @return string
 	 */
-	protected function getConfigRepos($path, GitWrapper\Git $gw, Interfaces\Parser $parser)
+	protected function getConfigRepos($path, Git\Git $gw, Interfaces\Parser $parser)
 	{
 		assert('is_string($path)');
 

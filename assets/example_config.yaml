@@ -70,7 +70,7 @@ git:
     #URL of your git repository you want to install ILIAS from
     url: https://github.com/ILIAS-eLearning/ILIAS.git
     #Branch name of the release you want to use
-    branch: release_5-1
+    branch: release_5-2
 
 #It is possible to create different object like roles, categories or orunits in ILIAS.
 #In the next lines, it is possible to define default strucures or objects.
@@ -219,7 +219,7 @@ user:
     #User can registrate themself. Decide which mode will be used. 1 (inactive) or 4 (registration with email confirmation)
     registration: 1
     #Lifetime of the registration link. Value is required in seconds
-    link_lifetime: 
+    link_lifetime: 86400
     #Define which of these fields are required in user profil. Not listed field names will be set as not required.
     #If required_fields is an empty array, all fields will be not requred
     required_fields:
@@ -295,21 +295,21 @@ editor:
 #Configure the java server. if configured ilias is able to generate pdf files and an extended search mode is activated
 java_server:
     #host of running java server
-    host: Test
+    host: 'localhost'
     #port the java server is listening
-    port: 8889
+    port: 11111
     #path for saving index files
-    index_path:
+    index_path: '/var/lib/ilias/ilServer-index/'
     #path and name of logfile. could be the same path as ilias log
-    log_file: 
+    log_file: '/var/log/ilias/ilServer.log'
     #log lever. possible DEBUG, INFO, WARN, ERROR, FATAL
-    log_level: INFO
+    log_level: 'INFO'
     #number of threads
     num_threads: 1
     #max size of files to get indexed. Value is given in MB
     max_file_size: 500
     #Path to create ilServer.ini
-    ini_path:
+    ini_path: '/etc/ilias/ilServer.ini'
 #Configure the ilias certificate generator. You can toggle with 1 (active) or 0 (inactive)
 certificate:
     enable: 1
@@ -318,7 +318,7 @@ soap:
     #Toggle SOAP is active or not. 1 (active) or 0 (inactive)
     enable: 1
     #Path to WSDL Files
-    wdsl_path: 
+    wdsl_path: http://localhost/webservice/soap/server.php?wsdl
     #Conenction timeout in seconds
     timeout: 10
 #Active and configure the learning progress
