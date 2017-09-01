@@ -1,7 +1,7 @@
 <?php
 /* Copyright (c) 2017 Daniel Weise <daniel.weise@concepts-and-training.de>, Extended GPL, see LICENSE */
 
-namespace CaT\Ilse\Executer;
+namespace CaT\Ilse\Executor;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -10,7 +10,7 @@ use CaT\Ilse\App;
 /**
  * Run the ILIAS setup
  */
-class SetupEnvironment extends BaseExecuter
+class SetupEnvironment extends BaseExecutor
 {
 	/**
 	 * @var bool

@@ -7,7 +7,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use CaT\Ilse\App;
-use CaT\Ilse\Executer;
+use CaT\Ilse\Executor;
 
 /**
  * Base class for all commands
@@ -81,7 +81,7 @@ abstract class BaseCommand extends Command
 	 */
 	protected function setup(array $args)
 	{
-		$sp = new Executer\SetupEnvironment($args['config'], $this->checker, $this->git, $args['interactive'], $this->path);
+		$sp = new Executor\SetupEnvironment($args['config'], $this->checker, $this->git, $args['interactive'], $this->path);
 		$sp->run();
 	}
 
@@ -94,7 +94,7 @@ abstract class BaseCommand extends Command
 	 */
 	protected function start(array $args)
 	{
-		$ii = new Executer\InstallILIAS($args['config'], $this->checker, $this->git, $this->path);
+		$ii = new Executor\InstallILIAS($args['config'], $this->checker, $this->git, $this->path);
 		$ii->run();
 	}
 
@@ -105,7 +105,7 @@ abstract class BaseCommand extends Command
 	 */
 	protected function delete(array $args)
 	{
-		$ri = new Executer\DeleteILIAS($args['config'], $this->checker, $this->git, $this->path);
+		$ri = new Executor\DeleteILIAS($args['config'], $this->checker, $this->git, $this->path);
 		$ri->run($args['all']);
 	}
 

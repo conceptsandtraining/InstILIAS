@@ -3,7 +3,7 @@
 namespace CaT\Ilse\Configurators;
 
 /**
- * Configurate ILIAS editor part
+ * Configure ILIAS editor part
  * 
  * Enable and configurat Page editor
  * Enable TinyMCE

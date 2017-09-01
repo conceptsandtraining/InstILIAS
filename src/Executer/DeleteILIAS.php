@@ -1,12 +1,12 @@
 <?php
 /* Copyright (c) 2017 Daniel Weise <daniel.weise@concepts-and-training.de>, Extended GPL, see LICENSE */
 
-namespace CaT\Ilse\Executer;
+namespace CaT\Ilse\Executor;
 
 /**
  * Delete an ILIAS instance
  */
-class DeleteILIAS extends BaseExecuter
+class DeleteILIAS extends BaseExecutor
 {
 	/**
 	 * @var \mysqli

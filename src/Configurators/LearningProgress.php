@@ -3,7 +3,7 @@
 namespace CaT\Ilse\Configurators;
 
 /**
- * Configurate ILIAS learning progress part
+ * Configure ILIAS learning progress part
  * 
  * Create roles
  */

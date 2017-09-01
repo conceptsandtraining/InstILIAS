@@ -3,7 +3,7 @@
 namespace CaT\Ilse\Configurators;
 
 /**
- * Configurate ILIAS categories part
+ * Configure ILIAS categories part
  * 
  * Create roles
  */

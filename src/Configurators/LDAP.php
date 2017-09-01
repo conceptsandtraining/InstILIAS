@@ -3,9 +3,9 @@
 namespace CaT\Ilse\Configurators;
 
 /**
- * Configurate ILIAS ldap part
+ * Configure ILIAS ldap part
  * 
- * Configurate LDAP
+ * Configure LDAP
  */
 class LDAP {
 	use ConfigHelper;
@@ -21,7 +21,7 @@ class LDAP {
 		$this->gDB = $db;
 	}
 	/**
-	 * configurates the LDAP server settings for login
+	 * configures the LDAP server settings for login
 	 *
 	 * @param \CaT\Ilse\Config\LDAP $ldap_config
 	 */

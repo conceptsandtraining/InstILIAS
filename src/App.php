@@ -26,13 +26,11 @@ class App extends Application
 	{
 		parent::__construct();
 
-		$ge 	= new GitExecuter();
+		$ge 	= new GitExecutor();
 		$repos 	= $this->getConfigRepos($path, $gw, $parser);
-
 		$this->initAppFolder($path);
 		$this->initConfigRepo($path, $gw, $parser, $repos, $ge);
 		$this->initCommands($path, $merger, $checker, $git, $repos);
-
 	}
 
 	/**
@@ -78,9 +76,9 @@ class App extends Application
 	 * @param GitWrapper\Git 		$gw
 	 * @param Interfaces\Parser 	$parser
 	 * @param string 				$repos
-	 * @param GitExecuter 			$ge
+	 * @param GitExecutor 			$ge
 	 */
-	protected function initConfigRepo($path, GitWrapper\Git $gw, Interfaces\Parser $parser, $repos, GitExecuter $ge)
+	protected function initConfigRepo($path, GitWrapper\Git $gw, Interfaces\Parser $parser, $repos, GitExecutor $ge)
 	{
 		$name = "";
 		$path = $path->getHomeDir() . "/" . self::I_P_GLOBAL_CONFIG;
@@ -118,7 +116,6 @@ class App extends Application
 		{
 			throw new \Exception("File not found at " . self::I_F_CONFIG_REPOS);
 		}
-
 		return $parser->read($path->getHomeDir() . "/" . self::I_F_CONFIG_REPOS);
 	}
 

@@ -3,7 +3,7 @@
 namespace CaT\Ilse\Configurators;
 
 /**
- * Configurate ILIAS user part
+ * Configure ILIAS user part
  * 
  * Create user accounts
  * Enable registration
@@ -46,7 +46,7 @@ class Users {
 	}
 
 	/**
-	 * Configurate the type of self registration
+	 * Configure the type of self registration
 	 *
 	 * @param \CaT\Ilse\Config\Users $users
 	 */
@@ -132,7 +132,7 @@ class Users {
 	}
 
 	/**
-	 * Configurate the passwort settings
+	 * Configure the passwort settings
 	 *
 	 * @param \CaT\Ilse\Config\PasswordSettings $password_settings
 	 */

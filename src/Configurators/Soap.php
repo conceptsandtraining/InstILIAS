@@ -3,7 +3,7 @@
 namespace CaT\Ilse\Configurators;
 
 /**
- * Configurate ILIAS soap part
+ * Configure ILIAS soap part
  * 
  * Create roles
  */
