@@ -16,6 +16,9 @@ class Setup extends Base {
 	 */
 	public static function fields() {
 		return array
-			("master_password"		=> array("string", false));
+			("master_password"	=> array("string", false),
+			 "user"				=> array("string", false),
+			 "group"			=> array("string", false)
+			);
 	}
 }
