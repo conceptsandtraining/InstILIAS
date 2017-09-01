@@ -7,7 +7,7 @@ use CaT\Ilse\Interfaces;
 /**
  * Serves common pathes
  */
-class CommonPathes implements Interfaces\CommonPathes
+class Pathes implements Interfaces\Pathes
 {
 	/**
 	 * @inheritdoc
@@ -23,5 +23,17 @@ class CommonPathes implements Interfaces\CommonPathes
 	public function getHomeDir()
 	{
 		return getenv("HOME");
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function expandHomeFolder($path)
+	{
+		if(strpos($path, '~') !== 0)
+		{
+			return $path;
+		}
+		return str_replace("~", $this->getHomeDir(), $path);
 	}
 }

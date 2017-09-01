@@ -17,7 +17,7 @@ class App extends Application
 	const I_R_BRANCH			= "master";
 	const I_D_WEB_DIR			= "data";
 
-	public function __construct(Interfaces\CommonPathes $path,
+	public function __construct(Interfaces\Pathes $path,
 								Interfaces\Merger $merger,
 								Interfaces\RequirementChecker $checker,
 								Interfaces\Git $git,
@@ -26,25 +26,23 @@ class App extends Application
 	{
 		parent::__construct();
 
-		$ge 	= new GitExecuter();
+		$ge 	= new GitExecutor();
 		$repos 	= $this->getConfigRepos($path, $gw, $parser);
-
 		$this->initAppFolder($path);
 		$this->initConfigRepo($path, $gw, $parser, $repos, $ge);
 		$this->initCommands($path, $merger, $checker, $git, $repos);
-
 	}
 
 	/**
 	 * Initialize all commands, and add them to the app
 	 *
-	 * @param Interfaces\CommonPathes 			$path
+	 * @param Interfaces\Pathes 				$path
 	 * @param Interfaces\Merger 				$merger
 	 * @param Interfaces\RequirementChecker 	$checker
 	 * @param Interfaces\Git 					$git
 	 * @param string[] 							$repos
 	 */
-	protected function initCommands(Interfaces\CommonPathes $path,
+	protected function initCommands(Interfaces\Pathes $path,
 									Interfaces\Merger $merger,
 									Interfaces\RequirementChecker $checker,
 									Interfaces\Git $git,
@@ -62,12 +60,10 @@ class App extends Application
 	/**
 	 * Checks whether the app folder exists otherwise create one
 	 *
-	 * @param string 		$path
+	 * @param Interfaces\Pathes 		$path
 	 */
-	protected function initAppFolder($path)
+	protected function initAppFolder(Interfaces\Pathes $path)
 	{
-		assert('is_string($path)');
-
 		if(!is_dir($path->getHomeDir() . "/" . self::I_P_GLOBAL))
 		{
 			mkdir($path->getHomeDir() . "/" . self::I_P_GLOBAL, 0755);
@@ -81,9 +77,9 @@ class App extends Application
 	 * @param Git\Git 		$gw
 	 * @param Interfaces\Parser 	$parser
 	 * @param string 				$repos
-	 * @param GitExecuter 			$ge
+	 * @param GitExecutor 			$ge
 	 */
-	protected function initConfigRepo($path, Git\Git $gw, Interfaces\Parser $parser, $repos, GitExecuter $ge)
+	protected function initConfigRepo($path, GitWrapper\Git $gw, Interfaces\Parser $parser, $repos, GitExecutor $ge)
 	{
 		$name = "";
 		$path = $path->getHomeDir() . "/" . self::I_P_GLOBAL_CONFIG;
@@ -121,7 +117,6 @@ class App extends Application
 		{
 			throw new \Exception("File not found at " . self::I_F_CONFIG_REPOS);
 		}
-
 		return $parser->read($path->getHomeDir() . "/" . self::I_F_CONFIG_REPOS);
 	}
 

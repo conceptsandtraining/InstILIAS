@@ -1,7 +1,7 @@
 <?php
 /* Copyright (c) 2017 Daniel Weise <daniel.weise@concepts-and-training.de>, Extended GPL, see LICENSE */
 
-namespace CaT\Ilse\Executer;
+namespace CaT\Ilse\Executor;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -10,7 +10,7 @@ use CaT\Ilse\App;
 /**
  * Run the ILIAS setup
  */
-class SetupEnvironment extends BaseExecuter
+class SetupEnvironment extends BaseExecutor
 {
 	/**
 	 * @var bool
@@ -24,13 +24,18 @@ class SetupEnvironment extends BaseExecuter
 	 * @param \CaT\Ilse\Interfaces\RequirementChecker 	$checker
 	 * @param \CaT\Ilse\Interfaces\Git 					$git
 	 * @param bool 										$interactive
+	 * @param \CaT\Ilse\Interfaces\Pathes 				$path
 	 */
-	public function __construct($config, \CaT\Ilse\Interfaces\RequirementChecker $checker, \CaT\Ilse\Interfaces\Git $git, $interactive)
+	public function __construct($config,
+								\CaT\Ilse\Interfaces\RequirementChecker $checker,
+								\CaT\Ilse\Interfaces\Git $git,
+								$interactive,
+								\CaT\Ilse\Interfaces\Pathes $path)
 	{
 		assert('is_string($config)');
 		assert('is_bool($interactive)');
-		parent::__construct($config, $checker, $git);
 
+		parent::__construct($config, $checker, $git, $path);
 		$this->interactive = $interactive;
 	}
 
@@ -68,14 +73,14 @@ class SetupEnvironment extends BaseExecuter
 			}
 
 			echo "Creating data directory...";
-			mkdir($this->data_path, 0640, true);
-			echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+			mkdir($this->data_path, 0770, true);
+			echo "\t\t\t\t\t\t\t\t\t\tDone!\n";
 		}
 		else if(!$this->interactive && !$check)
 		{
 			echo "Creating data directory...";
-			mkdir($this->data_path, 0640, true);
-			echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+			mkdir($this->data_path, 0770, true);
+			echo "\t\t\t\t\t\t\t\t\t\tDone!\n";
 		}
 	}
 
@@ -95,13 +100,13 @@ class SetupEnvironment extends BaseExecuter
 			}
 
 			echo "Setting permission to required...";
-			chmod($this->data_path, 0640);
+			chmod($this->data_path, 0770);
 			echo "\t\t\t\t\t\tDone!\n";
 		}
 		else if(!$this->interactive && !$check)
 		{
 			echo "Setting permission to required...";
-			chmod($this->data_path, 0640);
+			chmod($this->data_path, 0770);
 			echo "\t\t\t\t\t\tDone!\n";
 		}
 	}
@@ -143,14 +148,14 @@ class SetupEnvironment extends BaseExecuter
 			}
 
 			echo "Creating log directory...";
-			mkdir($this->gc->log()->path(), 0640, true);
-			echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+			mkdir($this->gc->log()->path(), 0770, true);
+			echo "\t\t\t\t\t\t\t\t\t\tDone!\n";
 		}
 		else if(!$this->interactive && !$check)
 		{
 			echo "Creating log directory...";
-			mkdir($this->gc->log()->path(), 0640, true);
-			echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+			mkdir($this->gc->log()->path(), 0770, true);
+			echo "\t\t\t\t\t\t\t\t\t\tDone!\n";
 		}
 	}
 
@@ -162,7 +167,7 @@ class SetupEnvironment extends BaseExecuter
 		$check = $this->checker->logDirectoryExists($this->gc->log()->error_log());
 		if(!$check)
 		{
-			mkdir($this->gc->log()->error_log(), 0640, true);
+			mkdir($this->gc->log()->error_log(), 0770, true);
 		}
 	}
 

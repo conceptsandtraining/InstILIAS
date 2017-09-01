@@ -7,7 +7,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use CaT\Ilse\Executer;
 
 /**
  * Implementation of the delete command
@@ -43,14 +42,5 @@ class DeleteCommand extends BaseCommand
 
 		$this->delete($args);
 		$out->writeln("\t\t\t\tDone!");
-	}
-
-	/**
-	 * Delete an ILIAS-Environment
-	 */
-	protected function delete(array $args)
-	{
-		$ri = new Executer\DeleteILIAS($args['config'], $this->checker, $this->git);
-		$ri->run($args['all']);
 	}
 }

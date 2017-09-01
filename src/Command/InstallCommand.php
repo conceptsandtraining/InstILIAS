@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use CaT\Ilse\Executer;
+use CaT\Ilse\Executor;
 
 /**
  * Implementation of the install command
@@ -45,43 +45,5 @@ class InstallCommand extends BaseCommand
 		$this->start($args);
 		$this->config('./ilse.php config ' . implode(" ", $config_names));
 		$out->writeln("\t\t\t\tDone!");
-	}
-
-	/**
-	 * Setup the environment
-	 *
-	 * @param ["param_name" => param_value] 	$args
-	 */
-	protected function setup(array $args)
-	{
-		$sp = new Executer\SetupEnvironment($args['config'], $this->checker, $this->git, $args['interactive']);
-		$sp->run();
-	}
-
-	/**
-	 * Start the installation process
-	 *
-	 * @param ["param_name" => param_value] 	$args
-	 */
-	protected function start(array $args)
-	{
-		$ii = new Executer\InstallILIAS($args['config'], $this->checker, $this->git);
-		$ii->run();
-	}
-
-	/**
-	 * Configurate the ILIAS environment
-	 *
-	 * @param string 		$cmd
-	 */
-	protected function config($cmd)
-	{
-		assert('is_string($cmd)');
-
-		// A hack to avoid an ilLanguage error.
-		// It runs config in an seperate process.
-		$this->process->setCommandLine($cmd);
-		$this->process->setTty(true);
-		$this->process->run();
 	}
 }

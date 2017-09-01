@@ -10,7 +10,7 @@ use CaT\Ilse\Git\GitWrapper;
  * @author Daniel Weise <daniel.weise@concepts-and-training.de>
  */
 
-class GitExecuter implements \CaT\Ilse\Interfaces\Git
+class GitExecutor implements \CaT\Ilse\Interfaces\Git
 {
 	const URL_REG_EX = "/^(https:\/\/github\.com)/";
 

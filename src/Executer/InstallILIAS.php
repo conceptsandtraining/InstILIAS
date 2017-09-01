@@ -38,11 +38,15 @@ class InstallILIAS extends BaseExecuter
 	 * @param string 									$config
 	 * @param \CaT\Ilse\Interfaces\RequirementChecker 	$checker
 	 * @param \CaT\Ilse\Interfaces\Git 					$git
+	 * @param \CaT\Ilse\Interfaces\Pathes 				$path
 	 */
-	public function __construct($config, \CaT\Ilse\Interfaces\RequirementChecker $checker, \CaT\Ilse\Interfaces\Git $git)
+	public function __construct($config,
+								\CaT\Ilse\Interfaces\RequirementChecker $checker,
+								\CaT\Ilse\Interfaces\Git $git,
+								\CaT\Ilse\Interfaces\Pathes $path)
 	{
 		assert('is_string($config)');
-		parent::__construct($config, $checker, $git);
+		parent::__construct($config, $checker, $git, $path);
 
 		chdir($this->absolute_path);
 		if(file_exists($this->absolute_path.'/libs/composer/vendor/autoload.php'))
@@ -66,7 +70,7 @@ class InstallILIAS extends BaseExecuter
 		$this->applyingUpdates();
 		$this->installLanguages();
 		$this->checkAfterInstall();
-		$this->setWWWData();
+		$this->setUserAndGroup();
 	}
 
 	/**
@@ -87,7 +91,7 @@ class InstallILIAS extends BaseExecuter
 								$this->client_id);
 		$this->lng = $sh->initLanguage();
 		$sh->init();
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
 	}
 
 	/**
@@ -98,7 +102,7 @@ class InstallILIAS extends BaseExecuter
 		$setup = new \ilSetup(true,"admin");
 		echo "Initializing installer...";
 		$this->iinst = new \CaT\Ilse\IliasReleaseInstaller($setup, $this->gc);
-		echo "\t\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\tDone!\n";
 	}
 
 	/**
@@ -109,7 +113,7 @@ class InstallILIAS extends BaseExecuter
 		echo "\nStart installing ILIAS\n";
 		echo "Creating ilias.ini...";
 		$this->iinst->writeIliasIni();
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
 	}
 
 	/**
@@ -119,7 +123,7 @@ class InstallILIAS extends BaseExecuter
 	{
 		echo "Creating client.ini...";
 		$this->iinst->writeClientIni();
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
 	}
 
 	/**
@@ -145,7 +149,7 @@ class InstallILIAS extends BaseExecuter
 		echo "Creating database...";
 		$this->iinst->installDatabase();
 		$this->db = $this->iinst->getDatabaseHandle();
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
 		$this->db_updater = new \ilDBUpdate($this->db);
 	}
 
@@ -156,10 +160,10 @@ class InstallILIAS extends BaseExecuter
 	{
 		echo "Applying updates...";
 		$this->iinst->applyUpdates($this->db_updater);
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
 		echo "Applying hotfixes...";
 		$this->iinst->applyHotfixes($this->db_updater);
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
 	}
 
 	/**
@@ -170,7 +174,7 @@ class InstallILIAS extends BaseExecuter
 		echo "Installing languages...";
 		$this->lng->setDbHandler($this->db);
 		$this->iinst->installLanguages($this->lng);
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\tDone!\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\tDone!\n";
 	}
 
 	/**
@@ -189,18 +193,17 @@ class InstallILIAS extends BaseExecuter
 	}
 
 	/**
-	 * Ensure all directorys owned by www-data
+	 * Ensure all directorys owned by specified user and group
 	 */
-	protected function setWWWData()
+	protected function setUserAndGroup()
 	{
-		$p = new Process("");
+		$p 		= new Process("");
 		$pathes = [$this->data_path, $this->absolute_path, $this->error_log];
 
 		array_map(function ($path) use ($p) {
-			$p->setCommandLine("chown -R www-data:www-data ".$path);
+			$p->setCommandLine("chown -R ".$this->user.":".$this->group." ".$path);
 			$p->setTty(true);
 			$p->run();
 		}, $pathes);
-		
 	}
 }

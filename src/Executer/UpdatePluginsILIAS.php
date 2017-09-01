@@ -1,7 +1,7 @@
 <?php
 /* Copyright (c) 2017 Daniel Weise <daniel.weise@concepts-and-training.de>, Extended GPL, see LICENSE */
 
-namespace CaT\Ilse\Executer;
+namespace CaT\Ilse\Executor;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -10,7 +10,7 @@ use CaT\Ilse\App;
 /**
  * Run the ILIAS update process
  */
-class UpdatePluginsILIAS extends BaseExecuter
+class UpdatePluginsILIAS extends BaseExecutor
 {
 	/**
 	 * @var CaT|Configurators\Plugins
@@ -24,10 +24,13 @@ class UpdatePluginsILIAS extends BaseExecuter
 	 * @param \CaT\Ilse\Interfaces\RequirementChecker 	$checker
 	 * @param \CaT\Ilse\Interfaces\Git 					$git
 	 */
-	public function __construct($config, \CaT\Ilse\Interfaces\RequirementChecker $checker, \CaT\Ilse\Interfaces\Git $git)
+	public function __construct($config,
+								\CaT\Ilse\Interfaces\RequirementChecker $checker,
+								\CaT\Ilse\Interfaces\Git $git,
+								\CaT\Ilse\Interfaces\Pathes $path)
 	{
 		assert('is_string($config)');
-		parent::__construct($config, $checker, $git);
+		parent::__construct($config, $checker, $git, $path);
 
 		chdir($this->absolute_path);
 		if(file_exists($this->absolute_path.'/libs/composer/vendor/autoload.php'))

@@ -3,7 +3,7 @@
 
 namespace CaT\Ilse\Interfaces;
 
-interface CommonPathes
+interface Pathes
 {
 	/**
 	 * Get the current working directory
@@ -18,4 +18,12 @@ interface CommonPathes
 	 * @return string
 	 */
 	public function getHomeDir();
+
+	/**
+	 * Convert ~ to actual home path
+	 *
+	 * @param string 		$path
+	 * @return string
+	 */
+	public function convertTilde($path);
 }

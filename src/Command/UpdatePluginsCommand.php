@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use CaT\Ilse\Executer;
+use CaT\Ilse\Executor;
 
 /**
  * Implementation of the updateplugins command
@@ -50,7 +50,7 @@ class UpdatePluginsCommand extends BaseCommand
 	 */
 	protected function update(array $args)
 	{
-		$u = new Executer\UpdatePluginsILIAS($args['config'], $this->checker, $this->git);
+		$u = new Executor\UpdatePluginsILIAS($args['config'], $this->checker, $this->git);
 		$u->run();
 	}
 }

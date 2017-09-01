@@ -3,7 +3,7 @@
 namespace CaT\Ilse\Configurators;
 
 /**
- * Configurate ILIAS certificate part
+ * Configure ILIAS certificate part
  * 
  * Create roles
  */

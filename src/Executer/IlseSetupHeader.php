@@ -7,7 +7,7 @@
 * @author	Stefan Hecken <stefan.hecken@concepts-and-training.de>
 */
 
-namespace CaT\Ilse\Executer;
+namespace CaT\Ilse\Executor;
 
 // remove notices from error reporting
 if (version_compare(PHP_VERSION, '5.3.0', '>='))
@@ -37,6 +37,7 @@ require_once "./Services/FileSystem/classes/class.ilFile.php";
 require_once "./setup/classes/class.ilCtrlStructureReader.php";
 require_once "./Services/Xml/classes/class.ilSaxParser.php";
 require_once "./include/inc.ilias_version.php";
+require_once("./Services/Component/classes/class.ilCachedComponentData.php");
 require_once("Services/Database/classes/class.ilDBUpdate.php");
 require_once("setup/classes/class.ilSetup.php");
 require_once 'Services/User/classes/class.ilUserPasswordEncoderFactory.php';

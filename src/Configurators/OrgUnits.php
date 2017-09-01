@@ -3,7 +3,7 @@
 namespace CaT\Ilse\Configurators;
 
 /**
- * Configurate ILIAS org unit part
+ * Configure ILIAS org unit part
  * 
  * Create roles
  */

@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use CaT\Ilse\Executer;
+use CaT\Ilse\Executor;
 
 /**
  * Implementation of the update command
@@ -44,24 +44,13 @@ class UpdateCommand extends BaseCommand
 	}
 
 	/**
-	 * Setup the environment
-	 *
-	 * @param ["param_name" => param_value] 	$args
-	 */
-	protected function setup(array $args)
-	{
-		$sp = new Executer\SetupEnvironment($args['config'], $this->checker, $this->git, false);
-		$sp->run();
-	}
-
-	/**
 	 * Start the update configuration process of ILIAS
 	 *
 	 * @param ["param_name" => param_value] 	$args
 	 */
 	protected function update(array $args)
 	{
-		$u = new Executer\UpdateILIAS($args['config'], $this->checker, $this->git);
+		$u = new Executor\UpdateILIAS($args['config'], $this->checker, $this->git, $this->path);
 		$u->run();
 	}
 }

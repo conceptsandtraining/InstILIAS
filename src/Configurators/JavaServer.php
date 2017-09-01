@@ -3,7 +3,7 @@
 namespace CaT\Ilse\Configurators;
 
 /**
- * Configurate ILIAS java server part
+ * Configure ILIAS java server part
  * 
  * Create roles
  */
