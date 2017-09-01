@@ -44,6 +44,10 @@ server:
 setup:
     #Master password to enter the setup.
     master_password: 
+    #Username for file and folder creation
+    user:
+    #Groupname for file and folder creation
+    group:
 tools:
     #ImageMagick is the requested image converter. It is used to create certificates. Enter the installation path
     convert: /usr/bin/convert
@@ -268,7 +272,7 @@ password_settings:
     forgot_password_aktive: 1
     #Max Number of login attemps, before account get blocked. if you enter 0 user account never will be blocked
     max_num_login_attempts: 0
-#Configurate youre changings for the editor administratio part. It's possible to toggle usage of tinyMCE and configure
+#Configure youre changings for the editor administratio part. It's possible to toggle usage of tinyMCE and configure
 #repository page edit settings
 editor:
     #Active the TyniMCE editor. You can toggle with 1 (active) or 0 (inactive)

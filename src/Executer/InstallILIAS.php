@@ -70,7 +70,7 @@ class InstallILIAS extends BaseExecuter
 		$this->applyingUpdates();
 		$this->installLanguages();
 		$this->checkAfterInstall();
-		$this->setWWWData();
+		$this->setUserAndGroup();
 	}
 
 	/**
@@ -193,18 +193,17 @@ class InstallILIAS extends BaseExecuter
 	}
 
 	/**
-	 * Ensure all directorys owned by www-data
+	 * Ensure all directorys owned by specified user and group
 	 */
-	protected function setWWWData()
+	protected function setUserAndGroup()
 	{
 		$p 		= new Process("");
 		$pathes = [$this->data_path, $this->absolute_path, $this->error_log];
 
 		array_map(function ($path) use ($p) {
-			$p->setCommandLine("chown -R www-data:www-data ".$path);
+			$p->setCommandLine("chown -R ".$this->user.":".$this->group." ".$path);
 			$p->setTty(true);
 			$p->run();
 		}, $pathes);
-		
 	}
 }
