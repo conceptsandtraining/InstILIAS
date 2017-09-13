@@ -92,7 +92,7 @@ class DeleteILIAS implements Action
 		$this->task_logger->eventually("Droping database '$database'", function () use ($database) {
 			$connection = $this->connectDB();
 			if($this->databaseExist($connection, $database)) {
-				$this->task_logger->eventually("Send DROP query", function () {
+				$this->task_logger->eventually("Send DROP query", function () use ($database, $connection) {
 					$drop_query = "DROP DATABASE ".$database;
 					if(!$connection->query($drop_query)) {
 						throw new Exception("Database could not be deleted.");
