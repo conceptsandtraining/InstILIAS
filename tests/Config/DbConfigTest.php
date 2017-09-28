@@ -111,7 +111,7 @@ class DbConfigTest extends PHPUnit_Framework_TestCase {
 		// TODO: do we need all possible encodings?
 		// TODO: why would we want to set the encoding?
 		return array
-			( array("utf8_unicode_ci", true)
+			( array("utf8_general_ci", true)
 			, array("utf-8_wob", false)
 			, array("iso", false)
 			, array("utf8-irgendwas", false)

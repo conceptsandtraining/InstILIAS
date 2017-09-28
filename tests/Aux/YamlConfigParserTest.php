@@ -39,7 +39,7 @@ database: ilias
 user: user
 password: passwd
 engine: innodb
-encoding: utf8_unicode_ci
+encoding: utf8_general_ci
 create_db: 1';
 		$obj = $this->parser->read_config($json_string, "\\CaT\\Ilse\\Config\\DB");
 
@@ -60,7 +60,7 @@ create_db: 1';
 		$this->assertEquals($obj->engine(), "innodb");
 		$this->assertInternalType("string", $obj->engine());
 
-		$this->assertEquals($obj->encoding(), "utf8_unicode_ci");
+		$this->assertEquals($obj->encoding(), "utf8_general_ci");
 		$this->assertInternalType("string", $obj->encoding());
 
 		$this->assertEquals($obj->createDb(), 1);
@@ -164,7 +164,7 @@ database: ilias
 user: user
 password: passwd
 engine: innodb
-encoding: utf8_unicode_ci
+encoding: utf8_general_ci
 create_db: 1
 default: de
 available:
