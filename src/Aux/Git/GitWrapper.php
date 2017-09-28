@@ -185,4 +185,22 @@ class GitWrapper implements Git
 		$out = $this->gitExec("git branch", array());
 		return array_map('trim', explode("\n", trim(str_replace("*", " ", $out))));
 	}
+
+	/**
+	 * Check whether $this->path is a git repo
+	 */
+	public function gitIsGitRepo()
+	{
+		return is_dir($this->path."/.git");
+	}
+
+	/**
+	 * Check whether $url is a remote git repo
+	 *
+	 * @param string 	$url
+	 */
+	public function gitIsRemoteGitRepo($url)
+	{
+		return $this->gitExec("git ls-remote", array($url, "-h"));
+	}
 }
