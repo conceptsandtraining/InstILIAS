@@ -19,8 +19,8 @@ class App extends Application
 	const CONFIG_REPOS_DIR	= "ilias-configs";
 	const ILSE_CONFIG		= "config.yaml";
 	const ILSE_DIR			= ".ilse";
-	const I_F_CONFIG			= "ilse_config.yaml";
-	const I_R_BRANCH			= "master";
+	const I_F_CONFIG		= "ilse_config.yaml";
+	const I_R_BRANCH		= "master";
 
 	public function __construct() {
 		parent::__construct("ilse - automatically sets ILIAS up");
