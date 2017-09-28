@@ -303,33 +303,33 @@ class CoreInstaller52 implements CoreInstaller {
 	protected function getIliasIniData() {
 		$ret = array();
 
-		$ret["datadir_path"] = $this->config->client()->dataDir();
-		$ret["log_path"] = $this->config->log()->path()."/".$this->config->log()->fileName();
-		$ret["error_log_path"] = $this->config->log()->errorLog();
-		$ret["time_zone"] = $this->config->server()->timezone();
-		$ret["convert_path"] = $this->config->tools()->convert();
-		$ret["zip_path"] = $this->config->tools()->zip();
-		$ret["unzip_path"] = $this->config->tools()->unzip();
-		$ret["java_path"] = $this->config->tools()->java();
-		$ret["setup_pass"] = $this->config->setup()->masterPassword();
+		$ret["datadir_path"] 	= $this->config->client()->dataDir();
+		$ret["log_path"] 		= $this->config->log()->path()."/".$this->config->log()->fileName();
+		$ret["error_log_path"] 	= $this->config->log()->errorLog();
+		$ret["time_zone"] 		= $this->config->server()->timezone();
+		$ret["convert_path"] 	= $this->config->tools()->convert();
+		$ret["zip_path"] 		= $this->config->tools()->zip();
+		$ret["unzip_path"] 		= $this->config->tools()->unzip();
+		$ret["java_path"] 		= $this->config->tools()->java();
+		$ret["setup_pass"] 		= $this->config->setup()->masterPassword();
 		if($this->config->httpsAutoDetect()) {
-			$ret["auto_https_detect_enabled"] = $this->config->httpsAutoDetect()->enabled();
-			$ret["auto_https_detect_header_name"] = $this->config->httpsAutoDetect()->headerName();
-			$ret["auto_https_detect_header_value"] = $this->config->httpsAutoDetect()->headerValue();
+			$ret["auto_https_detect_enabled"] 		= $this->config->httpsAutoDetect()->enabled();
+			$ret["auto_https_detect_header_name"] 	= $this->config->httpsAutoDetect()->headerName();
+			$ret["auto_https_detect_header_value"] 	= $this->config->httpsAutoDetect()->headerValue();
 		}
 		return $ret;
 	}
 
 	protected function getClientIniData() {
 		$ret = array();
-		$ret["datadir_path"] = $this->config->client()->dataDir();
-		$ret["client_id"] = $this->config->client()->name();
-		$ret["db_host"] = $this->config->database()->host();
-		$ret["db_name"] = $this->config->database()->database();
-		$ret["db_user"] = $this->config->database()->user();
-		$ret["db_pass"] = $this->config->database()->password();
-		$ret["db_type"] = $this->config->database()->engine();
-		$ret["session_expire"] = $this->config->client()->sessionExpire();
+		$ret["datadir_path"] 	= $this->config->client()->dataDir();
+		$ret["client_id"] 		= $this->config->client()->name();
+		$ret["db_host"] 		= $this->config->database()->host();
+		$ret["db_name"] 		= $this->config->database()->database();
+		$ret["db_user"] 		= $this->config->database()->user();
+		$ret["db_pass"] 		= $this->config->database()->password();
+		$ret["db_type"] 		= $this->config->database()->engine();
+		$ret["session_expire"] 	= $this->config->client()->sessionExpire();
 
 		return $ret;
 	}
