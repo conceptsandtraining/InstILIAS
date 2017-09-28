@@ -16,7 +16,8 @@ class Plugins extends Base {
 	 */
 	public static function fields() {
 		return array
-			("plugins" => array(array("\\CaT\\Ilse\\Config\\Plugin"), false)
+			("dir"		=> array("string", false)
+			,"plugins" 	=> array(array("\\CaT\\Ilse\\Config\\Plugin"), false)
 			);
 	}
 }
