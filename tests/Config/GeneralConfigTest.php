@@ -47,6 +47,9 @@ https_auto_detect:
     enabled: 0
     header_name: X-FORWARDED-SCHEME
     header_value: https
+plugin:
+    plugins: []
+    dir: bla
 ";
 /*
 category:
