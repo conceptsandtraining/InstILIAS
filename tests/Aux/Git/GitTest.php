@@ -22,7 +22,7 @@ abstract class GitTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @return CaT\Ilse\Git\Git
 	 */
-	abstract public function getImplementation($target_dir, $remote_url, $repo_name);
+	abstract public function getImplementation($target_dir, $remote_url);
 
 	/**
 	 * @var CaT\Ilse\Git\Git
@@ -36,7 +36,7 @@ abstract class GitTest extends PHPUnit_Framework_TestCase
 	public function setUp()
 	{
 		$this->gw 	= $this->getImplementation(tempdir(), __DIR__."/../../..", "ilias-tool-ilse");
-		$this->gwe 	= $this->getImplementation("www/falscheAdresse/de", "httpsss://testbla", "testbla");
+		$this->gwe 	= $this->getImplementation("www/falscheAdresse/de", "httpsss://testbla");
 	}
 
 	/**
