@@ -41,7 +41,6 @@ class GitWrapper implements Git
 	 *
 	 * @param string    $path
 	 * @param string    $repo_url
-	 * @param string 	$name
 	 * @param bool		$verbose
 	 */
 	public function __construct($path, $repo_url, $verbose = false)
