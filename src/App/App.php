@@ -90,6 +90,21 @@ class App extends Application
 						, $c["aux.taskLogger"]
 						);
 		};
+		$container["action.updatePluginsDirectory"] = function($c) {
+			$config = $c["config.ilias"];
+			return new Action\UpdatePluginsDirectory
+						( $config->plugins()
+						, $c["aux.gitFactory"]
+						, $c["setup.pluginAdministratorFactory"]
+						, $c["aux.taskLogger"]
+						);
+		};
+		$container["action.updatePlugins"] = function($c) {
+			return new Action\UpdatePlugins
+						( $c["config.ilias"]
+						, $c["aux.taskLogger"]
+						);
+		};
 
 		// Configs
 
