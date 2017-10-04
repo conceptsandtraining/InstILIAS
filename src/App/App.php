@@ -146,6 +146,10 @@ class App extends Application
 			return new CoreInstallerFactory();
 		};
 
+		$container["setup.pluginAdministratorFactory"] = function($c) {
+			return new PluginAdministratorFactory();
+		};
+
 		return $container;
 	}
 
