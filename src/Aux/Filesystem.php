@@ -65,6 +65,14 @@ interface Filesystem {
 	public function purgeDirectory($path);
 
 	/**
+	 * Get subdirectories of a directory
+	 *
+	 * @param 	string 	$path
+	 * @return 	string[]
+	 */
+	public function getSubdirectories($path);
+
+	/**
 	 * Change access permissions.
 	 *
 	 * ATTENTION: second parameter is an integer, i.e. use 0755 e.g.
