@@ -86,6 +86,22 @@ class FilesystemImpl implements Filesystem {
 	/**
 	 * @inheritdoc
 	 */
+	public function getSubdirectories($path)
+	{
+		$entries = array_diff(scandir($path), array('.', '..'));
+		foreach ($entries as $entry)
+		{
+			if(is_dir($entry))
+			{
+				$ret[] = $entry;
+			}
+		}
+		return $ret;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function chmod($path, $perms) {
 		assert('is_string($path)');
 		assert('is_int($perms)');
