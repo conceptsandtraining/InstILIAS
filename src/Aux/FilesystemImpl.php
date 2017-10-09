@@ -93,10 +93,10 @@ class FilesystemImpl implements Filesystem {
 		{
 			if(is_dir($entry))
 			{
-				$ret[] = $entry;
+				$subdirs[] = $entry;
 			}
 		}
-		return $ret;
+		return $subdirs;
 	}
 
 	/**
