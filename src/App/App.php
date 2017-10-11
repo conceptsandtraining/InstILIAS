@@ -7,6 +7,7 @@ use CaT\Ilse\Action;
 use CaT\Ilse\Aux;
 use CaT\Ilse\Aux\Git;
 use CaT\Ilse\Setup\CoreInstallerFactory;
+use CaT\Ilse\Setup\PluginAdministrationFactory;
 
 use Pimple\Container;
 use Symfony\Component\Console\Application;
@@ -93,9 +94,10 @@ class App extends Application
 		$container["action.updatePluginsDirectory"] = function($c) {
 			$config = $c["config.ilias"];
 			return new Action\UpdatePluginsDirectory
-						( $config->plugins()
+						( $config->server()
+						, $config->plugin()
+						, $c["aux.filesystem"]
 						, $c["aux.gitFactory"]
-						, $c["setup.pluginAdministratorFactory"]
 						, $c["aux.taskLogger"]
 						);
 		};
@@ -162,7 +164,7 @@ class App extends Application
 		};
 
 		$container["setup.pluginAdministratorFactory"] = function($c) {
-			return new PluginAdministratorFactory();
+			return new PluginAdministrationFactory();
 		};
 
 		return $container;
