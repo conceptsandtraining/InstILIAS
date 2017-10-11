@@ -88,10 +88,11 @@ class FilesystemImpl implements Filesystem {
 	 */
 	public function getSubdirectories($path)
 	{
+		$subdirs = array();
 		$entries = array_diff(scandir($path), array('.', '..'));
 		foreach ($entries as $entry)
 		{
-			if(is_dir($entry))
+			if($this->isDirectory($path."/".$entry))
 			{
 				$subdirs[] = $entry;
 			}
