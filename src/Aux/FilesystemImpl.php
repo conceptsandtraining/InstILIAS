@@ -141,4 +141,13 @@ class FilesystemImpl implements Filesystem {
 		assert('is_string($link)');
 		return symlink($target, $link);
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function isLink($filename)
+	{
+		assert('is_string($filename)');
+		return is_link($filename);
+	}
 }
