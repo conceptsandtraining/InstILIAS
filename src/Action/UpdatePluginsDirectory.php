@@ -5,6 +5,7 @@ use CaT\Ilse\Config;
 use CaT\Ilse\Aux;
 use CaT\Ilse\Aux\Git;
 use CaT\Ilse\Aux\TaskLogger;
+use CaT\Ilse\Aux\Yaml;
 
 /**
  * Class UpdatePluginsDirectory
@@ -15,6 +16,8 @@ use CaT\Ilse\Aux\TaskLogger;
 class UpdatePluginsDirectory implements Action
 {
 	const BRANCH = "master";
+	const PLUGIN_META = "meta.yaml";
+	const BASE_PATH = "Customizing/global/plugins";
 
 	/**
 	 * @var array
@@ -52,9 +55,9 @@ class UpdatePluginsDirectory implements Action
 	protected $update_plugins;
 
 	/**
-	 * @var string[]
+	 * @var Yaml
 	 */
-	protected $installed_plugins = array();
+	protected $parser;
 
 
 	/**
@@ -65,7 +68,8 @@ class UpdatePluginsDirectory implements Action
 								Aux\Filesystem $filesystem,
 								Git\GitFactory $factory,
 								TaskLogger $task_logger,
-								UpdatePlugins $update_plugins)
+								UpdatePlugins $update_plugins,
+								Yaml $parser)
 	{
 		$this->server = $server;
 		$this->plugins = $plugins;
@@ -73,6 +77,7 @@ class UpdatePluginsDirectory implements Action
 		$this->factory = $factory;
 		$this->task_logger = $task_logger;
 		$this->update_plugins = $update_plugins;
+		$this->parser = $parser;
 	}
 
 	/**
@@ -85,10 +90,10 @@ class UpdatePluginsDirectory implements Action
 		$this->dir = $this->plugins->dir();
 
 		$this->initPluginDir();
-		$this->checkForInstalledPlugins();
 		$this->clonePlugins();
 		$this->updatePlugins();
 		$this->deleteUnlistedPlugins();
+		$this->linkPluginsToIlias();
 	}
 
 	/**
@@ -115,35 +120,20 @@ class UpdatePluginsDirectory implements Action
 	}
 
 	/**
-	 * Check which plugins are installed.
-	 *
-	 * @return void
-	 */
-	protected function checkForInstalledPlugins()
-	{
-		if($this->filesystem->exists($this->dir))
-		{
-			$this->task_logger->always("Get installed plugins", function ()
-				{
-					$this->installed_plugins = $this->filesystem->getSubdirectories($this->dir);
-				});
-		}
-	}
-
-	/**
 	 * Clone plugins
 	 *
 	 * @return void
 	 */
 	protected function clonePlugins()
 	{
+		$installed_plugins = $this->getInstalledPlugins();
 		$urls = $this->getRepoUrls();
-		$this->task_logger->eventually("Clone new plugins", function () use($urls)
+		$this->task_logger->eventually("Clone new plugins", function () use($urls, $installed_plugins)
 			{
 				foreach ($urls as $url)
 				{
 					$name = $this->getRepoNameFromUrl($url);
-					if(is_null($this->installed_plugins) || in_array($name, $this->installed_plugins))
+					if(in_array($name, $installed_plugins))
 					{
 						continue;
 					}
@@ -184,7 +174,8 @@ class UpdatePluginsDirectory implements Action
 	protected function deleteUnlistedPlugins()
 	{
 		$urls = $this->getRepoUrls();
-		$marked_plugins = $this->getUnlistedPlugins($this->installed_plugins, $urls);
+		$installed_plugins = $this->getInstalledPlugins();
+		$marked_plugins = $this->getUnlistedPlugins($installed_plugins, $urls);
 
 		$this->task_logger->eventually("Delete plugins", function () use($marked_plugins)
 			{
@@ -192,11 +183,75 @@ class UpdatePluginsDirectory implements Action
 				{
 					$this->task_logger->always("delete plugin $marked_plugin", function() use($marked_plugin)
 						{
+							$link = $this->getPluginLinkPath($marked_plugin);
 							$this->update_plugins->uninstall($marked_plugin);
+							$this->filesystem->remove($link['path']."/".$link['name']);
 							$this->filesystem->remove($this->dir."/".$marked_plugin);
 						});
 				}
 			});
+	}
+
+	/**
+	 * Link plugins to ilias
+	 */
+	protected function linkPluginsToIlias()
+	{
+		$this->task_logger->eventually("Link plugins", function ()
+			{
+				$installed_plugins = $this->getInstalledPlugins();
+				foreach($installed_plugins as $plugin)
+				{
+					$link = $this->getPluginLinkPath($plugin);
+
+					if(!$this->filesystem->exists($link['path']))
+					{
+						$this->filesystem->makeDirectory($link['path']);
+					}
+					if(!$this->filesystem->isWriteable($link['path']))
+					{
+						throw new \Exception("No write acces to ".$link['path'].".");
+					}
+					$this->task_logger->always("link plugin ".$link['name'], function() use($plugin, $link)
+						{
+							if($this->filesystem->isLink($link['path']."/".$link['name']))
+							{
+								return true;
+							}
+							$this->filesystem->symlink($this->dir."/".$plugin, $link['path']."/".$link['name']);
+						});
+				}
+			});
+	}
+
+	/**
+	 * Get the path where to link the plugin
+	 */
+	protected function getPluginLinkPath($plugin)
+	{
+		$content 		= $this->filesystem->read($this->dir."/".$plugin."/".self::PLUGIN_META);
+		$meta 			= $this->parser->parse($content);
+		$absolute_path 	= $this->server->absolute_path();
+
+		$plugin = array();
+		$plugin['path'] = $absolute_path."/".self::BASE_PATH."/".$meta['ComponentType']."/".$meta['ComponentName']."/".$meta['Slot'];
+		$plugin['name'] = $meta['Name'];
+
+		return $plugin;
+	}
+
+	/**
+	 * Get installed plugins.
+	 *
+	 * @return string[] | []
+	 */
+	protected function getInstalledPlugins()
+	{
+		if($this->filesystem->exists($this->dir) && !$this->filesystem->isEmpty($this->dir))
+		{
+			return $this->filesystem->getSubdirectories($this->dir);
+		}
+		return array();
 	}
 
 	/**
