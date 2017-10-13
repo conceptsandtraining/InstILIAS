@@ -47,9 +47,15 @@ class UpdatePluginsDirectory implements Action
 	protected $dir;
 
 	/**
+	 * @var UpdatePlugins
+	 */
+	protected $update_plugins;
+
+	/**
 	 * @var string[]
 	 */
 	protected $installed_plugins = array();
+
 
 	/**
 	 * Constructor of the class UpdatePluginsDirectory
@@ -58,13 +64,15 @@ class UpdatePluginsDirectory implements Action
 								Config\Plugins $plugins,
 								Aux\Filesystem $filesystem,
 								Git\GitFactory $factory,
-								TaskLogger $task_logger)
+								TaskLogger $task_logger,
+								UpdatePlugins $update_plugins)
 	{
 		$this->server = $server;
 		$this->plugins = $plugins;
 		$this->filesystem = $filesystem;
 		$this->factory = $factory;
 		$this->task_logger = $task_logger;
+		$this->update_plugins = $update_plugins;
 	}
 
 	/**
@@ -177,6 +185,7 @@ class UpdatePluginsDirectory implements Action
 				{
 					$this->task_logger->always("delete plugin $marked_plugin", function() use($marked_plugin)
 						{
+							$this->update_plugins->uninstallPlugin($marked_plugin);
 							$this->filesystem->remove($this->dir."/".$marked_plugin);
 						});
 				}
