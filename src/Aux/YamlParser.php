@@ -16,7 +16,7 @@ class YamlParser implements Yaml
 	 */
 	public function parse($content)
 	{
-		assert('is_string($filename)');
+		assert('is_string($content)');
 		return SYM::parse($content);
 	}
 }
