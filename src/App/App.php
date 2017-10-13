@@ -99,6 +99,7 @@ class App extends Application
 						, $c["aux.filesystem"]
 						, $c["aux.gitFactory"]
 						, $c["aux.taskLogger"]
+						, $c["action.updatePlugins"]
 						);
 		};
 		$container["action.updatePlugins"] = function($c) {
