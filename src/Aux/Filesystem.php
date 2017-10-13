@@ -115,4 +115,12 @@ interface Filesystem {
 	 * @return 	bool
 	 */
 	public function symlink($target, $link);
+
+	/**
+	 * Check for symlink
+	 *
+	 * @param 	string 	$filename
+	 * @return 	bool
+	 */
+	public function isLink($filename);
 }
