@@ -100,11 +100,13 @@ class App extends Application
 						, $c["aux.gitFactory"]
 						, $c["aux.taskLogger"]
 						, $c["action.updatePlugins"]
+						, $c["aux.yaml"]
 						);
 		};
 		$container["action.updatePlugins"] = function($c) {
 			return new Action\UpdatePlugins
 						( $c["config.ilias"]
+						, $c["setup.pluginAdministrationFactory"]
 						, $c["aux.taskLogger"]
 						);
 		};
@@ -156,6 +158,9 @@ class App extends Application
 		};
 		$container["aux.gitFactory"] = function($c) {
 			return new Git\GitFactory();
+		};
+		$container["aux.yaml"] = function($c) {
+			return new Aux\YamlParser();
 		};
 
 		// Setup
