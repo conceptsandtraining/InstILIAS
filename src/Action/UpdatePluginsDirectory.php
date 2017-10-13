@@ -105,6 +105,13 @@ class UpdatePluginsDirectory implements Action
 					$this->filesystem->makeDirectory($this->dir);
 				});
 		}
+		$this->task_logger->always("Check write permissions", function()
+			{
+				if(!$this->filesystem->isWriteable($this->dir))
+				{
+					throw new \Exception("No write permissions");
+				}
+			});
 	}
 
 	/**
