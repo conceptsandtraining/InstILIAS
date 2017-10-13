@@ -86,6 +86,10 @@ class UpdatePluginsDirectoryTest extends PHPUnit_Framework_TestCase
 			->expects($this->any())
 			->method("gitClone");
 
+		$update_plugins
+			->expects($this->any())
+			->method("uninstall");
+
 		$action->perform();
 	}
 
