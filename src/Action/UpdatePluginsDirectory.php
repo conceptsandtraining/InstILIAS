@@ -185,7 +185,7 @@ class UpdatePluginsDirectory implements Action
 				{
 					$this->task_logger->always("delete plugin $marked_plugin", function() use($marked_plugin)
 						{
-							$this->update_plugins->uninstallPlugin($marked_plugin);
+							$this->update_plugins->uninstall($marked_plugin);
 							$this->filesystem->remove($this->dir."/".$marked_plugin);
 						});
 				}
