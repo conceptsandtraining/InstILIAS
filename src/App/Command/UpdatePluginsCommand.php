@@ -47,7 +47,7 @@ class UpdatePluginsCommand extends BaseCommand
 		$update_plugins_directory = $this->dic["action.updatePluginsDirectory"];
 		$update_plugins_directory->perform();
 
-		// $update_plugins = $this->dic["action.updatePlugins"];
-		// $update_plugins->perform();
+		$update_plugins = $this->dic["action.updatePlugins"];
+		$update_plugins->perform();
 	}
 }
