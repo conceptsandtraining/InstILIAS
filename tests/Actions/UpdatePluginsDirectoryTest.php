@@ -3,6 +3,7 @@
 /* Copyright (c) 2017 Richard Klees <richard.klees@concepts-and-training.de>, Extended GPL, see LICENSE */
 
 use \CaT\Ilse\Action\UpdatePluginsDirectory;
+use \CaT\Ilse\Action\UpdatePlugins;
 use \CaT\Ilse\Config;
 use \CaT\Ilse\IliasReleaseConfigurator;
 use \CaT\Ilse\Aux\TaskLogger;
@@ -35,13 +36,14 @@ class UpdatePluginsDirectoryTest extends PHPUnit_Framework_TestCase
 		$git_wrapper 	= $this->createMock(Git\GitWrapper::class);
 		$filesystem 	= $this->createMock("CaT\Ilse\Aux\Filesystem");
 		$task_logger 	= $this->createMock(TaskLogger::class);
+		$update_plugins = $this->createMock(UpdatePlugins::class);
 
 		$git 			= new Config\Git($url, "master", "5355");
 		$server 		= new Config\Server("http://ilias.de", "/var/www/html/ilias", "Europe/Berlin");
 		$plugin 		= new Config\Plugin($path, $git);
 		$plugins 		= new Config\Plugins($path, array($plugin));
 
-		$action 		= new UpdatePluginsDirectoryForTest($server, $plugins, $filesystem, $git_factory, $task_logger);
+		$action 		= new UpdatePluginsDirectoryForTest($server, $plugins, $filesystem, $git_factory, $task_logger, $update_plugins);
 
 		$filesystem
 			->expects($this->any())
@@ -97,13 +99,14 @@ class UpdatePluginsDirectoryTest extends PHPUnit_Framework_TestCase
 		$git_wrapper 	= $this->createMock(Git\GitWrapper::class);
 		$filesystem 	= $this->createMock("CaT\Ilse\Aux\Filesystem");
 		$task_logger 	= $this->createMock(TaskLogger::class);
+		$update_plugins = $this->createMock(UpdatePlugins::class);
 
 		$git 			= new Config\Git($url, "master", "5355");
 		$server 		= new Config\Server("http://ilias.de", "/var/www/html/ilias", "Europe/Berlin");
 		$plugin 		= new Config\Plugin($path, $git);
 		$plugins 		= new Config\Plugins($path, array($plugin));
 
-		$this->action 	= new UpdatePluginsDirectoryForTest($server, $plugins, $filesystem, $git_factory, $task_logger);
+		$this->action 	= new UpdatePluginsDirectoryForTest($server, $plugins, $filesystem, $git_factory, $task_logger, $update_plugins);
 
 		$installed = ['ilias-plugin-Accounting', 'ilias-plugin-Venues', 'ilias-plugin-MaterialList'];
 		$listed = ['https://github.com/conceptsandtraining/ilias-plugin-Accounting',
