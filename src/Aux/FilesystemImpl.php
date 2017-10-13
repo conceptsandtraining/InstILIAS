@@ -16,7 +16,7 @@ class FilesystemImpl implements Filesystem {
 	public function remove($path) {
 		assert('is_string($path)');
 
-		if (is_file($path)) {
+		if (is_file($path) || is_link($path)) {
 			unlink($path);
 		}
 		else {
