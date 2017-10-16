@@ -60,7 +60,7 @@ SlotId: evhk";
 			->method("exists")
 			->willReturn(true);
 		$filesystem
-			->expects($this->once())
+			->expects($this->any())
 			->method("isWriteable")
 			->willReturn(true);
 		$filesystem
