@@ -229,8 +229,8 @@ class UpdatePluginsDirectory implements Action
 	 */
 	protected function getPluginLinkPath($plugin)
 	{
-		$content 		= $this->filesystem->read($this->dir."/".$plugin."/".self::PLUGIN_META);
-		$meta 			= $this->parser->parse($content);
+		$content = $this->filesystem->read($this->dir."/".$plugin."/".self::PLUGIN_META);
+		$meta = $this->parser->parse($content);
 		$absolute_path 	= $this->server->absolute_path();
 
 		$plugin = array();
