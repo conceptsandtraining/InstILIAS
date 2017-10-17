@@ -10,79 +10,43 @@ namespace CaT\Ilse\Setup;
 interface PluginAdministration
 {
 	/**
-	 * Install plugins
-	 *
-	 * @param 	string 		$plugin
-	 * @throws 	RuntimeException
-	 * @return 	void
-	 */
-	public function install($plugin);
-
-	/**
-	 * Checks whether a plugin is installed
-	 *
-	 * @param 	string 		$plugin
-	 * @return 	void
-	 */
-	public function isInstalled($plugin);
-
-	/**
 	 * Update plugins
 	 *
-	 * @param 	string 		$plugin
-	 * @throws 	RuntimeException
+	 * @param 	string 		$name
 	 * @return 	void
 	 */
-	public function update();
+	public function update($name);
 
 	/**
 	 * Activate plugin
 	 *
-	 * @param 	$plugin
-	 * @throws 	RuntimeException
+	 * @param 	$name
 	 * @return 	void
 	 */
-	public function activate();
-
-	/**
-	 * Deactivate plugin
-	 *
-	 * @param 	string 		$plugin
-	 * @throws 	RuntimeException
-	 * @return 	void
-	 */
-	public function deactivate($plugin);
+	public function activate($name);
 
 	/**
 	 * Update language for a plugin
 	 *
-	 * @param 	string 		$plugin
+	 * @param 	string 		$name
+	 * @return 	void
 	 */
-	public function updateLanguage($plugin);
-
-	/**
-	 * Get an instance of installed plugin
-	 *
-	 * @param  	string 		$plugin
-	 * @throws 	RuntimeException
-	 * @return 	object
-	 */
-	public function getPluginObject($plugin);
+	public function updateLanguage($name);
 
 	/**
 	 * Uninstall plugin
 	 *
-	 * @param 	string 		$plugin
-	 * @throws 	RuntimeException
+	 * @param 	string 		$name
 	 * @return 	void
 	 */
-	public function uninstall();
+	public function uninstall($name);
 
 	/**
-	 * Check wether the plugin needs an update
+	 * Get an instance of installed plugin
 	 *
-	 * @param 	string 		$plugin
-	 * @return 	bool
+	 * @param  	string 		$name
+	 * @return 	object
 	 */
-	public function needsUpdate($plugin);
+	public function getPluginObject($name);
+
 }
