@@ -6,6 +6,8 @@ use CaT\Ilse\Aux;
 use CaT\Ilse\Aux\Git;
 use CaT\Ilse\Aux\TaskLogger;
 use CaT\Ilse\Aux\Yaml;
+use CaT\Ilse\Aux\UpdatePluginsHelper;
+use CaT\Ilse\Action\UpdatePlugin;
 
 /**
  * Class UpdatePluginsDirectory
@@ -16,18 +18,6 @@ use CaT\Ilse\Aux\Yaml;
 class UpdatePluginsDirectory implements Action
 {
 	const BRANCH = "master";
-	const PLUGIN_META = "meta.yaml";
-	const BASE_PATH = "Customizing/global/plugins";
-
-	/**
-	 * @var array
-	 */
-	protected $server;
-
-	/**
-	 * @var array
-	 */
-	protected $plugins;
 
 	/**
 	 * @var Aux\Filesystem
@@ -45,9 +35,9 @@ class UpdatePluginsDirectory implements Action
 	protected $task_logger;
 
 	/**
-	 * @var string
+	 * @var UpdatePlugins
 	 */
-	protected $dir;
+	protected $update_plugins_helper;
 
 	/**
 	 * @var UpdatePlugins
@@ -63,21 +53,18 @@ class UpdatePluginsDirectory implements Action
 	/**
 	 * Constructor of the class UpdatePluginsDirectory
 	 */
-	public function __construct(Config\Server $server,
-								Config\Plugins $plugins,
-								Aux\Filesystem $filesystem,
-								Git\GitFactory $factory,
-								TaskLogger $task_logger,
-								UpdatePlugins $update_plugins,
-								Yaml $parser)
-	{
-		$this->server = $server;
-		$this->plugins = $plugins;
+	public function __construct(
+		Aux\Filesystem $filesystem,
+		Git\GitFactory $factory,
+		TaskLogger $task_logger,
+		UpdatePluginsHelper $update_plugins_helper,
+		UpdatePlugins $update_plugins
+	) {
 		$this->filesystem = $filesystem;
 		$this->factory = $factory;
 		$this->task_logger = $task_logger;
+		$this->update_plugins_helper = $update_plugins_helper;
 		$this->update_plugins = $update_plugins;
-		$this->parser = $parser;
 	}
 
 	/**
@@ -87,8 +74,6 @@ class UpdatePluginsDirectory implements Action
 	 */
 	public function perform()
 	{
-		$this->dir = $this->plugins->dir();
-
 		$this->initPluginDir();
 		$this->clonePlugins();
 		$this->updatePlugins();
@@ -103,16 +88,16 @@ class UpdatePluginsDirectory implements Action
 	 */
 	protected function initPluginDir()
 	{
-		if(!$this->filesystem->exists($this->dir))
+		if(!$this->filesystem->exists($this->update_plugins_helper->dir()))
 		{
 			$this->task_logger->always("Make plugin directory", function ()
 				{
-					$this->filesystem->makeDirectory($this->dir);
+					$this->filesystem->makeDirectory($this->update_plugins_helper->dir());
 				});
 		}
 		$this->task_logger->always("Check write permissions", function()
 			{
-				if(!$this->filesystem->isWriteable($this->dir))
+				if(!$this->filesystem->isWriteable($this->update_plugins_helper->dir()))
 				{
 					throw new \Exception("No write permissions");
 				}
@@ -126,19 +111,19 @@ class UpdatePluginsDirectory implements Action
 	 */
 	protected function clonePlugins()
 	{
-		$installed_plugins = $this->getInstalledPlugins();
-		$urls = $this->getRepoUrls();
+		$installed_plugins = $this->update_plugins_helper->getInstalledPlugins();
+		$urls = $this->update_plugins_helper->getRepoUrls();
 		$this->task_logger->eventually("Clone new plugins", function () use($urls, $installed_plugins)
 			{
 				foreach ($urls as $url)
 				{
-					$name = $this->getRepoNameFromUrl($url);
+					$name = $this->update_plugins_helper->getRepoNameFromUrl($url);
 					if(in_array($name, $installed_plugins))
 					{
 						continue;
 					}
-					$this->filesystem->makeDirectory($this->dir."/".$name);
-					$git = $this->factory->getRepo($this->dir."/".$name, $url);
+					$this->filesystem->makeDirectory($this->update_plugins_helper->dir()."/".$name);
+					$git = $this->factory->getRepo($this->update_plugins_helper->dir()."/".$name, $url);
 					$this->task_logger->always("clone plugin $name", [$git, "gitClone"]);
 				}
 			});
@@ -151,13 +136,13 @@ class UpdatePluginsDirectory implements Action
 	 */
 	protected function updatePlugins()
 	{
-		$urls = $this->getRepoUrls();
+		$urls = $this->update_plugins_helper->getRepoUrls();
 		$this->task_logger->eventually("Pull plugins", function () use($urls)
 			{
 				foreach ($urls as $url)
 				{
-					$name = $this->getRepoNameFromUrl($url);
-					$git = $this->factory->getRepo($this->dir.'/'.$name, $url);
+					$name = $this->update_plugins_helper->getRepoNameFromUrl($url);
+					$git = $this->factory->getRepo($this->update_plugins_helper->dir().'/'.$name, $url);
 					$this->task_logger->always("pull plugin $name", function() use($git)
 						{
 							$git->gitPull(self::BRANCH);
@@ -173,9 +158,9 @@ class UpdatePluginsDirectory implements Action
 	 */
 	protected function deleteUnlistedPlugins()
 	{
-		$urls = $this->getRepoUrls();
-		$installed_plugins = $this->getInstalledPlugins();
-		$marked_plugins = $this->getUnlistedPlugins($installed_plugins, $urls);
+		$urls = $this->update_plugins_helper->getRepoUrls();
+		$installed_plugins = $this->update_plugins_helper->getInstalledPlugins();
+		$marked_plugins = $this->update_plugins_helper->getUnlistedPlugins($installed_plugins, $urls);
 
 		$this->task_logger->eventually("Delete plugins", function () use($marked_plugins)
 			{
@@ -183,10 +168,10 @@ class UpdatePluginsDirectory implements Action
 				{
 					$this->task_logger->always("delete plugin $marked_plugin", function() use($marked_plugin)
 						{
-							$link = $this->getPluginLinkPath($marked_plugin);
-							$this->update_plugins->uninstall($marked_plugin);
+							$link = $this->update_plugins_helper->getPluginLinkPath($marked_plugin);
+							$this->update_plugins->uninstall($link['name']);
 							$this->filesystem->remove($link['path']."/".$link['name']);
-							$this->filesystem->remove($this->dir."/".$marked_plugin);
+							$this->filesystem->remove($this->update_plugins_helper->dir()."/".$marked_plugin);
 						});
 				}
 			});
@@ -199,10 +184,10 @@ class UpdatePluginsDirectory implements Action
 	{
 		$this->task_logger->eventually("Link plugins", function ()
 			{
-				$installed_plugins = $this->getInstalledPlugins();
+				$installed_plugins = $this->update_plugins_helper->getInstalledPlugins();
 				foreach($installed_plugins as $plugin)
 				{
-					$link = $this->getPluginLinkPath($plugin);
+					$link = $this->update_plugins_helper->getPluginLinkPath($plugin);
 
 					if(!$this->filesystem->exists($link['path']))
 					{
@@ -218,79 +203,9 @@ class UpdatePluginsDirectory implements Action
 							{
 								return true;
 							}
-							$this->filesystem->symlink($this->dir."/".$plugin, $link['path']."/".$link['name']);
+							$this->filesystem->symlink($this->update_plugins_helper->dir()."/".$plugin, $link['path']."/".$link['name']);
 						});
 				}
 			});
-	}
-
-	/**
-	 * Get the path where to link the plugin
-	 */
-	protected function getPluginLinkPath($plugin)
-	{
-		$content = $this->filesystem->read($this->dir."/".$plugin."/".self::PLUGIN_META);
-		$meta = $this->parser->parse($content);
-		$absolute_path 	= $this->server->absolute_path();
-
-		$plugin = array();
-		$plugin['path'] = $absolute_path."/".self::BASE_PATH."/".$meta['ComponentType']."/".$meta['ComponentName']."/".$meta['Slot'];
-		$plugin['name'] = $meta['Name'];
-
-		return $plugin;
-	}
-
-	/**
-	 * Get installed plugins.
-	 *
-	 * @return string[] | []
-	 */
-	protected function getInstalledPlugins()
-	{
-		if($this->filesystem->exists($this->dir) && !$this->filesystem->isEmpty($this->dir))
-		{
-			return $this->filesystem->getSubdirectories($this->dir);
-		}
-		return array();
-	}
-
-	/**
-	 * Get unlisted plugins
-	 *
-	 * @return string[]
-	 */
-	protected function getUnlistedPlugins(array $installed, array $listed)
-	{
-		$listed = array_map(function($url) { return $this->getRepoNameFromUrl($url); }, $listed);
-		return array_diff($installed, $listed);
-	}
-
-	/**
-	 * Get repo urls
-	 *
-	 * @return string[]
-	 */
-	protected function getRepoUrls()
-	{
-		$ret = array_map(function($plugin)
-			{
-				return $plugin->git()->url();
-			}
-			, $this->plugins->plugins());
-		return $ret;
-	}
-
-	/**
-	 * Get the repo name
-	 *
-	 * @param 	string 	$url
-	 * @return 	string
-	 */
-	protected function getRepoNameFromUrl($url)
-	{
-		assert('is_string($url)');
-
-		$lastslash = strrpos($url, '/');
-		return substr($url, $lastslash+1);
 	}
 }
