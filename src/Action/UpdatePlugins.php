@@ -1,13 +1,10 @@
 <?php
 namespace CaT\Ilse\Action;
 
-use CaT\Ilse\Aux;
-use CaT\Ilse\Config;
+use CaT\Ilse\Config\General;
 use CaT\Ilse\Setup\PluginAdministrationFactory;
-
-
-// delegieren an PluginAdmin
-// links nach ilias erstellen
+use CaT\Ilse\Aux\TaskLogger;
+use CaT\Ilse\Aux\UpdatePluginsHelper;
 
 /**
  * Install or update plugins from a list.
@@ -25,12 +22,37 @@ class UpdatePlugins implements Action
 	protected $plugin_admin;
 
 	/**
+	 * @var Config\General
+	 */
+	protected $config;
+
+	/**
+	 * @var PluginAdministrationFactory
+	 */
+	protected $plugin_admin_factory;
+
+	/**
+	 * @var UpdatePluginsDirectory
+	 */
+	protected $update_plugins_helper;
+
+	/**
+	 * @var TaskLogger
+	 */
+	protected $logger;
+
+	/**
 	 * Constructor of the class UpdatePlugins
 	 */
-	public function __construct(Config\General $config, PluginAdministrationFactory $factory, Aux\TaskLogger $logger)
-	{
+	public function __construct(
+		General $config,
+		PluginAdministrationFactory $factory,
+		UpdatePluginsHelper $update_plugins_helper,
+		TaskLogger $logger
+	) {
 		$this->config = $config;
 		$this->plugin_admin_factory = $factory;
+		$this->update_plugins_helper = $update_plugins_helper;
 		$this->logger = $logger;
 	}
 
@@ -39,65 +61,118 @@ class UpdatePlugins implements Action
 	 */
 	public function perform()
 	{
-		$this->install();
-		$this->update();
-		$this->activate();
-		$this->link();
+		$urls = $this->update_plugins_helper->getRepoUrls();
+
+		$this->install($urls);
+		$this->update($urls);
+		$this->activate($urls);
+		$this->updateLanguage($urls);
 	}
 
 	/**
-	 * 
+	 * Get an instance of PluginAdministration
+	 *
+	 * @return PluginAdministration
 	 */
 	protected function getPluginAdmin()
 	{
 		if(!$this->plugin_admin)
 		{
-			$this->plugin_admin = $this->plugin_admin_factory->getPluginAdministrationForRelease("5.2", $this->config, $this->logger);
+			$this->plugin_admin = $this->plugin_admin_factory->getPluginAdministrationForRelease(
+				"5.2",
+				$this->config,
+				$this->logger,
+				$this->update_plugins_helper
+				);
 		}
 		return $this->plugin_admin;
 	}
 
 	/**
 	 * Install plugins
+	 *
+	 * @param 	string[]	$urls
+	 * @return 	void
 	 */
-	protected function install()
+	protected function install($urls)
 	{
-		$this->logger->eventually("Install plugins", function () {
-			foreach ($this->config->plugin() as $plugin) {
-				return $this->getPluginAdmin()->install($plugin);
+		assert('is_array($urls)');
+		$this->logger->eventually("Install plugin", function() use($urls) {
+			foreach ($urls as $url) {
+				$name = substr($url, strrpos($url, "-")+1);
+				$this->logger->always("install plugin ".$name, function() use($name) {
+					$this->getPluginAdmin()->install($name);
+				});
 			}
 		});
 	}
 
 	/**
 	 * Update plugins
+	 *
+	 * @param 	string[]	$urls
+	 * @return 	void
 	 */
-	protected function update()
+	protected function update($urls)
 	{
-		$this->logger->always("Update plugins", [$this->getPluginAdmin(), "update"]);
+		assert('is_array($urls)');
+		$this->logger->eventually("Update plugin", function() use($urls) {
+			foreach ($urls as $url) {
+				$name = substr($url, strrpos($url, "-")+1);
+				$this->logger->always("update plugin ".$name, function() use($name) {
+					if($this->getPluginAdmin()->needsUpdate($name)) {
+						$this->getPluginAdmin()->update($name);
+					}
+				});
+			}
+		});
 	}
 
 	/**
 	 * Activate plugins
+	 *
+	 * @param 	string[]	$urls
+	 * @return 	void
 	 */
-	protected function activate()
+	protected function activate($urls)
 	{
-		$this->logger->always("Activate plugins", [$this->getPluginAdmin(), "activate"]);
+		$this->logger->eventually("Activate plugin", function() use($urls) {
+			foreach ($urls as $url) {
+				$name = substr($url, strrpos($url, "-")+1);
+				$this->logger->always("activate plugin ".$name, function() use($name) {
+					$this->getPluginAdmin()->activate($name);
+				});
+			}
+		});
+	}
+
+	/**
+	 * Update language
+	 *
+	 * @param 	string[]	$urls
+	 * @return 	void
+	 */
+	protected function updateLanguage($urls)
+	{
+		$this->logger->eventually("Update plugin language", function() use($urls) {
+			foreach ($urls as $url) {
+				$name = substr($url, strrpos($url, "-")+1);
+				$this->logger->always("update language for plugin ".$name, function() use($name) {
+					$this->getPluginAdmin()->updateLanguage($name);
+				});
+			}
+		});
 	}
 
 	/**
 	 * Delete plugin
+	 *
+	 * @param 	$name
+	 * @return 	void
 	 */
-	public function uninstall()
+	public function uninstall($name)
 	{
-		$this->logger->always("Uninstall plugin", [$this->getPluginAdmin(), "uninstall"]);
-	}
-
-	/**
-	 * Link plugin to ilias
-	 */
-	protected function link()
-	{
-
+		assert('is_string($name)');
+		$this->getPluginAdmin()->uninstall($name);
 	}
 }
