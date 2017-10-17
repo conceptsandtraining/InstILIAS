@@ -94,19 +94,18 @@ class App extends Application
 		$container["action.updatePluginsDirectory"] = function($c) {
 			$config = $c["config.ilias"];
 			return new Action\UpdatePluginsDirectory
-						( $config->server()
-						, $config->plugin()
-						, $c["aux.filesystem"]
+						( $c["aux.filesystem"]
 						, $c["aux.gitFactory"]
 						, $c["aux.taskLogger"]
+						, $c["aux.updatePluginsHelper"]
 						, $c["action.updatePlugins"]
-						, $c["aux.yaml"]
 						);
 		};
 		$container["action.updatePlugins"] = function($c) {
 			return new Action\UpdatePlugins
 						( $c["config.ilias"]
 						, $c["setup.pluginAdministrationFactory"]
+						, $c["aux.updatePluginsHelper"]
 						, $c["aux.taskLogger"]
 						);
 		};
@@ -161,6 +160,15 @@ class App extends Application
 		};
 		$container["aux.yaml"] = function($c) {
 			return new Aux\YamlParser();
+		};
+		$container["aux.updatePluginsHelper"] = function($c) {
+			$config = $c["config.ilias"];
+			return new Aux\UpdatePluginsHelper
+						( $config->server()
+						, $config->plugin()
+						, $c["aux.filesystem"]
+						, $c["aux.yaml"]
+						);
 		};
 
 		// Setup
