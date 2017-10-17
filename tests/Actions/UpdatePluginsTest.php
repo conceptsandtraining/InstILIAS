@@ -3,9 +3,8 @@
 /* Copyright (c) 2017 Richard Klees <richard.klees@concepts-and-training.de>, Extended GPL, see LICENSE */
 
 use \CaT\Ilse\Action\UpdatePlugins;
-use \CaT\Ilse\Config;
-use \CaT\Ilse\IliasReleaseConfigurator;
-use \CaT\Ilse\Aux\TaskLogger;
+use CaT\Ilse\Aux\TaskLogger;
+use CaT\Ilse\Aux\UpdatePluginsHelper;
 use \CaT\Ilse\Setup\PluginAdministrationFactory;
 use \CaT\Ilse\Setup\PluginAdministration52;
 use \CaT\Ilse\Configurators\Plugins;
@@ -70,16 +69,17 @@ plugin:
 
 	public function test_perform()
 	{
-		$url = "https://my_plugin";
+		$url = "https://-my_plugin";
 		$path = "test/dummy";
 		$name = "my_plugin";
 
-		$config 				= $this->parser->read_config($this->yaml_string, "\\CaT\\Ilse\\Config\\General");
-		$task_logger 			= $this->createMock(TaskLogger::class);
-		$plugin_admin_factory 	= $this->createMock(PluginAdministrationFactory::class);
-		$plugin_admin 			= $this->createMock(PluginAdministration52::class);
+		$config = $this->parser->read_config($this->yaml_string, "\\CaT\\Ilse\\Config\\General");
+		$plugin_admin_factory = $this->createMock(PluginAdministrationFactory::class);
+		$update_plugins_helper = $this->createMock(UpdatePluginsHelper::class);
+		$task_logger = $this->createMock(TaskLogger::class);
+		$plugin_admin = $this->createMock(PluginAdministration52::class);
 
-		$action 				= new UpdatePluginsForTest($config, $plugin_admin_factory, $task_logger);
+		$action = new UpdatePluginsForTest($config, $plugin_admin_factory, $update_plugins_helper, $task_logger);
 
 		$task_logger
 			->expects($this->any())
@@ -100,17 +100,27 @@ plugin:
 			->with("5.2", $config, $task_logger)
 			->willReturn($plugin_admin);
 
-		$plugin_admin
-			->expects($this->at(0))
-			->method("install");
+		$update_plugins_helper
+			->expects($this->once())
+			->method("getRepoUrls")
+			->willReturn(array($url));
 
 		$plugin_admin
-			->expects($this->at(1))
-			->method("update");
-
+			->expects($this->once())
+			->method("needsUpdate")
+			->willReturn(true);
 		$plugin_admin
-			->expects($this->at(2))
-			->method("activate");
+			->expects($this->once())
+			->method("update")
+			->with($name);
+		$plugin_admin
+			->expects($this->once())
+			->method("activate")
+			->with($name);
+		$plugin_admin
+			->expects($this->once())
+			->method("updateLanguage")
+			->with($name);
 
 		$action->perform();
 	}
