@@ -3,6 +3,7 @@
 /* Copyright (c) 2017 Richard Klees <richard.klees@concepts-and-training.de>, Extended GPL, see LICENSE */
 
 use \CaT\Ilse\Action\UpdatePluginsDirectory;
+use \CaT\Ilse\Aux\UpdatePluginsHelper;
 use \CaT\Ilse\Action\UpdatePlugins;
 use \CaT\Ilse\Config;
 use \CaT\Ilse\IliasReleaseConfigurator;
@@ -10,18 +11,11 @@ use \CaT\Ilse\Aux\TaskLogger;
 use CaT\Ilse\Aux\Git;
 use CaT\Ilse\Aux;
 
+use CaT\Ilse\Action\UpdatePlugin;
+
 // If database had it own interface like filesystem, we could
 // drop this and write a proper test instead.
 class UpdatePluginsDirectoryForTest extends UpdatePluginsDirectory{
-	public function _getUnlistedPlugins($installed, $listed)
-	{
-		return $this->getUnlistedPlugins($installed, $listed);
-	}
-
-	public function _getRepoNameFromUrl($url)
-	{
-		return $this->getRepoNameFromUrl($url);
-	}
 }
 
 class UpdatePluginsDirectoryTest extends PHPUnit_Framework_TestCase
@@ -37,19 +31,26 @@ ComponentName: EventHandling
 Slot: EventHook
 SlotId: evhk";
 
-		$git_factory 	= $this->createMock(Git\GitFactory::class);
-		$git_wrapper 	= $this->createMock(Git\GitWrapper::class);
-		$filesystem 	= $this->createMock("CaT\Ilse\Aux\Filesystem");
-		$task_logger 	= $this->createMock(TaskLogger::class);
+		$git_factory = $this->createMock(Git\GitFactory::class);
+		$git_wrapper = $this->createMock(Git\GitWrapper::class);
+		$filesystem = $this->createMock("CaT\Ilse\Aux\Filesystem");
+		$task_logger = $this->createMock(TaskLogger::class);
+		$update_plugins_helper = $this->createMock(UpdatePluginsHelper::class);
 		$update_plugins = $this->createMock(UpdatePlugins::class);
-		$parser 		= $this->createMock("CaT\Ilse\Aux\Yaml");
+		$parser = $this->createMock("CaT\Ilse\Aux\Yaml");
 
-		$git 			= new Config\Git($url, "master", "5355");
-		$server 		= new Config\Server("http://ilias.de", "/var/www/html/ilias", "Europe/Berlin");
-		$plugin 		= new Config\Plugin($path, $git);
-		$plugins 		= new Config\Plugins($path, array($plugin));
+		$git = new Config\Git($url, "master", "5355");
+		$server = new Config\Server("http://ilias.de", "/var/www/html/ilias", "Europe/Berlin");
+		$plugin = new Config\Plugin($path, $git);
+		$plugins = new Config\Plugins($path, array($plugin));
 
-		$action 		= new UpdatePluginsDirectoryForTest($server, $plugins, $filesystem, $git_factory, $task_logger, $update_plugins, $parser);
+		$action = new UpdatePluginsDirectoryForTest(
+													$filesystem,
+													$git_factory,
+													$task_logger,
+													$update_plugins_helper,
+													$update_plugins,
+													$parser);
 
 		$filesystem
 			->expects($this->any())
@@ -72,6 +73,12 @@ SlotId: evhk";
 			->method("read")
 			->willReturn($yaml);
 
+		$git_factory
+			->expects($this->at(0))
+			->method("getRepo")
+			->with($path."/".$name, $url, false)
+			->willReturn($git_wrapper);
+
 		$task_logger
 			->expects($this->any())
 			->method("eventually")
@@ -85,54 +92,35 @@ SlotId: evhk";
 				$c();
 			}));
 
-		$git_factory
-			->expects($this->at(0))
-			->method("getRepo")
-			->with($path."/".$name, $url, false)
-			->willReturn($git_wrapper);
-		$git_factory
-			->expects($this->at(1))
-			->method("getRepo")
-			->with($path."/".$name, $url, false)
-			->willReturn($git_wrapper);
-
 		$git_wrapper
 			->expects($this->any())
 			->method("gitClone");
+
+		$update_plugins_helper
+			->expects($this->any())
+			->method("getRepoUrls")
+			->willReturn(array($url));
+		$update_plugins_helper
+			->expects($this->any())
+			->method("getRepoNameFromUrl")
+			->willReturn($name);
+		$update_plugins_helper
+			->expects($this->any())
+			->method("getInstalledPlugins")
+			->willReturn(array($name, $name));
+		$update_plugins_helper
+			->expects($this->any())
+			->method("getUnlistedPlugins")
+			->willReturn(array("test", "noch"));
+		$update_plugins_helper
+			->expects($this->any())
+			->method("dir")
+			->willReturn($path);
 
 		$update_plugins
 			->expects($this->any())
 			->method("uninstall");
 
 		$action->perform();
-	}
-
-	public function test_getUnlistedPlugins()
-	{
-		$url = "https://my_plugin";
-		$path = "test/dummy";
-		$name = "my_plugin";
-
-		$git_factory 	= $this->createMock(Git\GitFactory::class);
-		$git_wrapper 	= $this->createMock(Git\GitWrapper::class);
-		$filesystem 	= $this->createMock("CaT\Ilse\Aux\Filesystem");
-		$task_logger 	= $this->createMock(TaskLogger::class);
-		$update_plugins = $this->createMock(UpdatePlugins::class);
-		$parser 		= $this->createMock("CaT\Ilse\Aux\Yaml");
-
-		$git 			= new Config\Git($url, "master", "5355");
-		$server 		= new Config\Server("http://ilias.de", "/var/www/html/ilias", "Europe/Berlin");
-		$plugin 		= new Config\Plugin($path, $git);
-		$plugins 		= new Config\Plugins($path, array($plugin));
-
-		$this->action 	= new UpdatePluginsDirectoryForTest($server, $plugins, $filesystem, $git_factory, $task_logger, $update_plugins, $parser);
-
-		$installed = ['ilias-plugin-Accounting', 'ilias-plugin-Venues', 'ilias-plugin-MaterialList'];
-		$listed = ['https://github.com/conceptsandtraining/ilias-plugin-Accounting',
-				   'https://github.com/conceptsandtraining/ilias-plugin-Venues'];
-
-		$uninstall = $this->action->_getUnlistedPlugins($installed, $listed);
-
-		$this->assertTrue(array_shift($uninstall) == "ilias-plugin-MaterialList");
 	}
 }
