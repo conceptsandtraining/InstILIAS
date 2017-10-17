@@ -5,15 +5,23 @@ namespace CaT\Ilse\Setup;
 
 use CaT\Ilse\Config;
 use Cat\Ilse\Aux\TaskLogger;
+use CaT\Ilse\Aux\UpdatePluginsHelper;
 
 class PluginAdministrationFactory {
 	/**
 	 * @param	string	$version
 	 * @return	CoreInstaller
 	 */
-	public function getPluginAdministrationForRelease($version, Config\General $config, TaskLogger $logger) {
+	public function getPluginAdministrationForRelease(
+		$version,
+		Config\General $config,
+		TaskLogger $logger,
+		UpdatePluginsHelper $update_plugin_helper
+	) {
+		assert('is_string($version)');
+
 		if (substr($version, 0, 3) == "5.2") {
-			return new PluginAdministration52($config, $logger);
+			return new PluginAdministration52($config, $logger, $update_plugin_helper);
 		}
 		throw new \InvalidArgumentException("There is no core installer for version '$version'");
 	}
