@@ -1,11 +1,9 @@
 <?php
 namespace CaT\Ilse\Action;
 
-use CaT\Ilse\Config;
-use CaT\Ilse\Aux;
-use CaT\Ilse\Aux\Git;
+use CaT\Ilse\Aux\Filesystem;
+use CaT\Ilse\Aux\Git\GitFactory;
 use CaT\Ilse\Aux\TaskLogger;
-use CaT\Ilse\Aux\Yaml;
 use CaT\Ilse\Aux\UpdatePluginsHelper;
 use CaT\Ilse\Action\UpdatePlugin;
 
@@ -54,8 +52,8 @@ class UpdatePluginsDirectory implements Action
 	 * Constructor of the class UpdatePluginsDirectory
 	 */
 	public function __construct(
-		Aux\Filesystem $filesystem,
-		Git\GitFactory $factory,
+		Filesystem $filesystem,
+		GitFactory $factory,
 		TaskLogger $task_logger,
 		UpdatePluginsHelper $update_plugins_helper,
 		UpdatePlugins $update_plugins
@@ -69,8 +67,6 @@ class UpdatePluginsDirectory implements Action
 
 	/**
 	 * @inheritdoc
-	 *
-	 * @return void
 	 */
 	public function perform()
 	{
@@ -84,6 +80,7 @@ class UpdatePluginsDirectory implements Action
 	/**
 	 * Initialize the plugin directory.
 	 *
+	 * @throws \Exception
 	 * @return void
 	 */
 	protected function initPluginDir()
@@ -179,6 +176,9 @@ class UpdatePluginsDirectory implements Action
 
 	/**
 	 * Link plugins to ilias
+	 *
+	 * @throws \Exception
+	 * @return void
 	 */
 	protected function linkPluginsToIlias()
 	{
