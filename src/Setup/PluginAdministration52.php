@@ -53,6 +53,7 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 	public function install($name)
 	{
 		assert('is_string($name)');
+
 		$plugin = $this->getPluginObject($name, false);
 
 		\ilPlugin::createPluginRecord(
@@ -127,7 +128,8 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 	/**
 	 * @inheritdoc
 	 */
-	public function getPluginObject($plugin_name, $call_construct = true) {
+	public function getPluginObject($plugin_name, $call_construct = true)
+	{
 		assert('is_string($plugin_name)');
 
 		$full_class_name = self::PLUGIN_CLASS_PREFIX_IL.$plugin_name.self::PLUGIN_CLASS_SUFFIX;
