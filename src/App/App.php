@@ -203,39 +203,6 @@ class App extends Application
 	}
 
 	/**
-	 * Initialize the config repo in ~/.ilias-installer/config
-	 *
-	 * @param string 				$path
-	 * @param Git\Git 		$gw
-	 * @param Interfaces\Parser 	$parser
-	 * @param string 				$repos
-	 * @param GitExecutor 			$ge
-	 */
-	protected function initConfigRepo($path, Git\Git $gw, Interfaces\Parser $parser, $repos, GitExecutor $ge)
-	{
-		$name = "";
-		$path = $path->getHomeDir() . "/" . self::I_P_GLOBAL_CONFIG;
-
-		foreach ($repos as $repo)
-		{
-			$dir = $this->getUniqueDirName($path, $repo);
-			if(!is_dir($dir))
-			{
-				mkdir($dir, 0755, true);
-			}
-			else
-			{
-				$name = basename($repo, '.git');
-			}
-			$ge->cloneGitTo($repo,
-							self::I_R_BRANCH,
-							$dir,
-							$name
-							);
-		}
-	}
-
-	/**
 	 * Read app config file
 	 *
 	 * @param Aux\Filesystem		$fs
