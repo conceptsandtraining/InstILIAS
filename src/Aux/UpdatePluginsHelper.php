@@ -88,7 +88,7 @@ class UpdatePluginsHelper
 	}
 
 	/**
-	 * Get installed plugins.
+	 * Get an array of installed plugins with their repo-names.
 	 *
 	 * @return string[] | []
 	 */
@@ -102,16 +102,27 @@ class UpdatePluginsHelper
 	}
 
 	/**
-	 * Get the path where to link the plugin
+	 * Get an array with the ilias path for a plugin and its name
+	 *
+	 * @param string 	$name
+	 * @return string[]
 	 */
-	public function getPluginLinkPath($plugin)
+	public function getPluginLinkPath($name)
 	{
-		$content = $this->filesystem->read($this->dir."/".$plugin."/".self::PLUGIN_META);
+		assert('is_string($name)');
+
+		$content = $this->filesystem->read($this->dir."/".$name."/".self::PLUGIN_META);
 		$meta = $this->parser->parse($content);
-		$absolute_path 	= $this->server->absolute_path();
+		$absolute_path = $this->server->absolute_path();
 
 		$plugin = array();
-		$plugin['path'] = $absolute_path."/".self::BASE_PATH."/".$meta['ComponentType']."/".$meta['ComponentName']."/".$meta['Slot'];
+		$plugin['path'] =
+			$absolute_path."/".
+			self::BASE_PATH."/".
+			$meta['ComponentType']."/".
+			$meta['ComponentName']."/".
+			$meta['Slot']
+			;
 		$plugin['name'] = $meta['Name'];
 
 		return $plugin;
@@ -120,7 +131,9 @@ class UpdatePluginsHelper
 	/**
 	 * Get unlisted plugins
 	 *
-	 * @return string[]
+	 * @param 	array 	$installed
+	 * @param 	array 	$listed
+	 * @return 	string[]
 	 */
 	public function getUnlistedPlugins(array $installed, array $listed)
 	{
