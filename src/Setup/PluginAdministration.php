@@ -42,6 +42,14 @@ interface PluginAdministration
 	public function uninstall($name);
 
 	/**
+	 * Checks whether a plugin needs an update
+	 *
+	 * @param 	string 		$name
+	 * @return 	bool
+	 */
+	public function needsUpdate($name);
+
+	/**
 	 * Get an instance of installed plugin
 	 *
 	 * @param  	string 		$name
