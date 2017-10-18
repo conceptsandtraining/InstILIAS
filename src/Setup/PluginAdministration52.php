@@ -48,7 +48,7 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 	}
 
 	/**
-	 * 
+	 * @inheritdoc
 	 */
 	public function install($name)
 	{
