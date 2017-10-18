@@ -94,7 +94,7 @@ class UpdatePlugins implements Action
 	 * @param 	string[]	$urls
 	 * @return 	void
 	 */
-	protected function install($urls)
+	protected function install(array $urls)
 	{
 		assert('is_array($urls)');
 		$this->logger->eventually("Install plugin", function() use($urls) {
@@ -113,7 +113,7 @@ class UpdatePlugins implements Action
 	 * @param 	string[]	$urls
 	 * @return 	void
 	 */
-	protected function update($urls)
+	protected function update(array $urls)
 	{
 		assert('is_array($urls)');
 		$this->logger->eventually("Update plugin", function() use($urls) {
@@ -134,7 +134,7 @@ class UpdatePlugins implements Action
 	 * @param 	string[]	$urls
 	 * @return 	void
 	 */
-	protected function activate($urls)
+	protected function activate(array $urls)
 	{
 		$this->logger->eventually("Activate plugin", function() use($urls) {
 			foreach ($urls as $url) {
@@ -152,7 +152,7 @@ class UpdatePlugins implements Action
 	 * @param 	string[]	$urls
 	 * @return 	void
 	 */
-	protected function updateLanguage($urls)
+	protected function updateLanguage(array $urls)
 	{
 		$this->logger->eventually("Update plugin language", function() use($urls) {
 			foreach ($urls as $url) {
@@ -167,12 +167,13 @@ class UpdatePlugins implements Action
 	/**
 	 * Delete plugin
 	 *
-	 * @param 	$name
+	 * @param 	string 		$name
 	 * @return 	void
 	 */
 	public function uninstall($name)
 	{
 		assert('is_string($name)');
+
 		$this->getPluginAdmin()->uninstall($name);
 	}
 }
