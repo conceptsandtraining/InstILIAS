@@ -10,6 +10,14 @@ namespace CaT\Ilse\Setup;
 interface PluginAdministration
 {
 	/**
+	 * Creates a record in db for the specified plugin
+	 *
+	 * @param 	string 		$name
+	 * @return 	void
+	 */
+	public function install($name);
+
+	/**
 	 * Update plugins
 	 *
 	 * @param 	string 		$name
