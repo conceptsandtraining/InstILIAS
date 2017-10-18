@@ -154,12 +154,13 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 			return;
 		}
 
-		define("CLIENT_ID", $this->config->client()->name());
-		require_once("./Services/Context/classes/class.ilContext.php");
-		require_once("./Services/Init/classes/class.ilInitialisation.php");
-
 		$cur = getcwd();
 		chdir($this->config->server()->absolutePath());
+
+		require_once("./Services/Context/classes/class.ilContext.php");
+		require_once("./Services/Init/classes/class.ilInitialisation.php");
+		define("CLIENT_ID", $this->config->client()->name());
+
 		\ilContext::init(\ilContext::CONTEXT_UNITTEST);
 		\ilInitialisation::initILIAS();
 		chdir($cur);
