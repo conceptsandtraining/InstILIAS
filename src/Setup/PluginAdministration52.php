@@ -93,7 +93,14 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 	 */
 	public function uninstall($name)
 	{
-		$plugin = $this->getPluginObject($name);
+		// necessary for plugins that not installed via ilse
+		try{
+			$plugin = $this->getPluginObject($name);
+		} catch (\Exception $e) {
+			$this->install($name);
+			$plugin = $this->getPluginObject($name);
+		}
+
 		$plugin->deactivate();
 		$plugin->uninstall();
 	}
@@ -134,11 +141,13 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 		if(isset($GLOBALS['DIC'])){
 			return;
 		}
-		$cur = getcwd();
-		chdir($this->config->server()->absolutePath());
+
 		define("CLIENT_ID", $this->config->client()->name());
 		require_once("./Services/Context/classes/class.ilContext.php");
 		require_once("./Services/Init/classes/class.ilInitialisation.php");
+
+		$cur = getcwd();
+		chdir($this->config->server()->absolutePath());
 		\ilContext::init(\ilContext::CONTEXT_UNITTEST);
 		\ilInitialisation::initILIAS();
 		chdir($cur);
