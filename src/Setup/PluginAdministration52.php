@@ -148,6 +148,9 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 		chdir($cur);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function initILIASIsNotInitialized()
 	{
 		if(isset($GLOBALS['DIC'])){
