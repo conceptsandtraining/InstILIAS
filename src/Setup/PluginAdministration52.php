@@ -52,6 +52,7 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 	 */
 	public function install($name)
 	{
+		assert('is_string($name)');
 		$plugin = $this->getPluginObject($name, false);
 
 		\ilPlugin::createPluginRecord(
@@ -66,6 +67,8 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 	 */
 	public function update($name)
 	{
+		assert('is_string($name)');
+
 		$plugin = $this->getPluginObject($name);
 		$plugin->update();
 	}
@@ -75,6 +78,8 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 	 */
 	public function activate($name)
 	{
+		assert('is_string($name)');
+
 		$plugin = $this->getPluginObject($name);
 		$plugin->activate();
 	}
@@ -84,6 +89,8 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 	 */
 	public function updateLanguage($name)
 	{
+		assert('is_string($name)');
+
 		$plugin = $this->getPluginObject($name);
 		$plugin->updateLanguages();
 	}
@@ -93,6 +100,8 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 	 */
 	public function uninstall($name)
 	{
+		assert('is_string($name)');
+
 		// necessary for plugins that not installed via ilse
 		try{
 			$plugin = $this->getPluginObject($name);
@@ -110,6 +119,8 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 	 */
 	public function needsUpdate($name)
 	{
+		assert('is_string($name)');
+
 		return $this->getPluginObject($name)->needsUpdate();
 	}
 
@@ -118,6 +129,7 @@ class PluginAdministration52 implements PluginAdministration, InitILIAS
 	 */
 	public function getPluginObject($plugin_name, $call_construct = true) {
 		assert('is_string($plugin_name)');
+
 		$full_class_name = self::PLUGIN_CLASS_PREFIX_IL.$plugin_name.self::PLUGIN_CLASS_SUFFIX;
 
 		$cur = getcwd();
