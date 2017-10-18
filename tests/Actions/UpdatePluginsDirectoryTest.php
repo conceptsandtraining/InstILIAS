@@ -45,12 +45,13 @@ SlotId: evhk";
 		$plugins = new Config\Plugins($path, array($plugin));
 
 		$action = new UpdatePluginsDirectoryForTest(
-													$filesystem,
-													$git_factory,
-													$task_logger,
-													$update_plugins_helper,
-													$update_plugins,
-													$parser);
+			$filesystem,
+			$git_factory,
+			$task_logger,
+			$update_plugins_helper,
+			$update_plugins,
+			$parser
+			);
 
 		$filesystem
 			->expects($this->any())
