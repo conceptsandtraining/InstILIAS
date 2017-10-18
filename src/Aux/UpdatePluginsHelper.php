@@ -59,7 +59,7 @@ class UpdatePluginsHelper
 	}
 
 	/**
-	 * Get repo urls
+	 * Get repo urls from config file
 	 *
 	 * @return string[]
 	 */
