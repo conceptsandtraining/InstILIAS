@@ -16,8 +16,10 @@ use CaT\Ilse\Action;
  */
 class UpdatePluginsCommand extends BaseCommand
 {
-/**
+	/**
 	 * Configure the command with description and help text
+	 *
+	 * @return void
 	 */
 	protected function configure()
 	{
@@ -33,6 +35,8 @@ class UpdatePluginsCommand extends BaseCommand
 	 *
 	 * @param InputInterface 	$in
 	 * @param OutputInterface 	$out
+	 *
+	 * @return void
 	 */
 	protected function execute(InputInterface $in, OutputInterface $out)
 	{
