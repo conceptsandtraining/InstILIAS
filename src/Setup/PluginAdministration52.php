@@ -7,7 +7,7 @@ use CaT\Ilse\Aux\UpdatePluginsHelper;
 use CaT\Ilse\Setup\InitILIAS;
 
 /**
- * Class PluginAdministration52
+ * Delegates calls to plugins in ilias
  *
  * @author Daniel Weise <daniel.weise@concepts-and-training.de>
  * @copyright Extended GPL, see LICENSE

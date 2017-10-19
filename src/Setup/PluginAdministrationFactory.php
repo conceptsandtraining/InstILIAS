@@ -1,5 +1,5 @@
 <?php
-/* Copyright (c) 2016, 2017 Stefan Hecken <stefan.hecken@concepts-and-training.de>, Richard Klees <richard.klees@concepts-and-training.de>, Extended GPL, see LICENSE */
+/* Copyright (c) 2016, 2017 Daniel Weise <daniel.weise@concepts-and-training.de> Extended GPL, see LICENSE */
 
 namespace CaT\Ilse\Setup;
 
@@ -7,6 +7,9 @@ use CaT\Ilse\Config;
 use Cat\Ilse\Aux\TaskLogger;
 use CaT\Ilse\Aux\UpdatePluginsHelper;
 
+/**
+ * Provides a PluginAdministration object depending on a given version number.
+ */
 class PluginAdministrationFactory {
 	/**
 	 * @param	string	$version
