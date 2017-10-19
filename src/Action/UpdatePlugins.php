@@ -22,7 +22,7 @@ class UpdatePlugins implements Action
 	protected $plugin_admin;
 
 	/**
-	 * @var Config\General
+	 * @var General
 	 */
 	protected $config;
 
@@ -96,7 +96,6 @@ class UpdatePlugins implements Action
 	 */
 	protected function install(array $urls)
 	{
-		assert('is_array($urls)');
 		$this->logger->eventually("Install plugin", function() use($urls) {
 			foreach ($urls as $url) {
 				$name = substr($url, strrpos($url, "-")+1);
@@ -115,7 +114,6 @@ class UpdatePlugins implements Action
 	 */
 	protected function update(array $urls)
 	{
-		assert('is_array($urls)');
 		$this->logger->eventually("Update plugin", function() use($urls) {
 			foreach ($urls as $url) {
 				$name = substr($url, strrpos($url, "-")+1);
