@@ -193,12 +193,9 @@ class App extends Application
 	{
 		$dic = $this->getDIC();
 
-//		$this->add(new Command\UpdateCommand($path, $merger, $checker, $git, $repos));
 		$this->add(new Command\DeleteCommand($dic));
 		$this->add(new Command\UpdatePluginsCommand($dic));
-//		$this->add(new Command\ReinstallCommand($path, $merger, $checker, $git, $repos));
 		$this->add(new Command\InstallCommand($dic));
-//		$this->add(new Command\ConfigCommand($path, $merger, $checker, $git, $repos));
 		$this->add(new Command\ExampleConfigCommand($dic));
 	}
 
