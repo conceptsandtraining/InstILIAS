@@ -28,7 +28,7 @@ class UpdatePluginsHelper
 	protected $plugins;
 
 	/**
-	 * @var Aux\Filesystem
+	 * @var Filesystem
 	 */
 	protected $filesystem;
 
