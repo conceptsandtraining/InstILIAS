@@ -33,6 +33,13 @@ class ConfigMerger {
 		return SYM::dump($ret);
 	}
 
+	/**
+	 * Merge two arrays
+	 *
+	 * @param 	mixed 	$base
+	 * @param 	mixed 	$new
+	 * @return 	array
+	 */
 	protected function merge($base, $new)
 	{
 		if(is_array($base)) {
@@ -52,6 +59,13 @@ class ConfigMerger {
 		return $base;
 	}
 
+	/**
+	 * Add missing keys
+	 *
+	 * @param 	array 	$base
+	 * @param 	array 	$new
+	 * @return 	array
+	 */
 	protected function addMissingKeys(array $base, array $new)
 	{
 		$key_base = array_keys($base);
