@@ -18,12 +18,12 @@ class UpdatePluginsDirectory implements Action
 	const BRANCH = "master";
 
 	/**
-	 * @var Aux\Filesystem
+	 * @var Filesystem
 	 */
 	protected $filesystem;
 
 	/**
-	 * @var Git\GitFactory
+	 * @var GitFactory
 	 */
 	protected $factory;
 
@@ -203,7 +203,11 @@ class UpdatePluginsDirectory implements Action
 							{
 								return true;
 							}
-							$this->filesystem->symlink($this->update_plugins_helper->dir()."/".$plugin, $link['path']."/".$link['name']);
+							$this->filesystem->symlink(
+								$this->update_plugins_helper->dir()."/".
+								$plugin, $link['path']."/".
+								$link['name']
+								);
 						});
 				}
 			});
