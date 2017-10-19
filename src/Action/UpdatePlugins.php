@@ -17,7 +17,7 @@ use CaT\Ilse\Aux\UpdatePluginsHelper;
 class UpdatePlugins implements Action
 {
 	/**
-	 * PluginAdministration
+	 * @var PluginAdministration
 	 */
 	protected $plugin_admin;
 
