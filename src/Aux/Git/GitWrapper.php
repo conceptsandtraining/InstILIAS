@@ -25,11 +25,6 @@ class GitWrapper implements Git
 	protected $repo_url;
 
 	/**
-	 * @var string
-	 */
-	protected $repo_name;
-
-	/**
 	 * @var bool
 	 */
 	protected $verbose;
@@ -46,18 +41,15 @@ class GitWrapper implements Git
 	 *
 	 * @param string    $path
 	 * @param string    $repo_url
-	 * @param string 	$name
 	 * @param bool		$verbose
 	 */
-	public function __construct($path, $repo_url, $name, $verbose = false)
+	public function __construct($path, $repo_url, $verbose = false)
 	{
 		assert('is_string($path)');
 		assert('is_string($repo_url)');
-		assert('is_string($name)');
 
 		$this->path = $path;
 		$this->repo_url = $repo_url;
-		$this->repo_name = $name;
 		$this->verbose = $verbose;
 		$this->remote = "origin";
 	}
@@ -141,42 +133,18 @@ class GitWrapper implements Git
 	}
 
 	/**
-	 * Check whether $this->path is a git repo
-	 */
-	public function gitIsGitRepo()
-	{
-		return is_dir($this->path."/.git");
-	}
-
-	/**
-	 * Check whether $url is a remote git repo
-	 *
-	 * @param string 	$url
-	 */
-	public function gitIsRemoteGitRepo($url)
-	{
-		return $this->gitExec("git ls-remote", array($url, "-h"));
-	}
-
-	/**
 	 * Execute a git command
 	 *
 	 * @param string    	$cmd
 	 * @param array     	$params
-	 * @param string|null	$repo_name
 	 * @param bool			$use_tty
 	 *
 	 * @throws GitException
 	 * @return string 
 	 */
-	protected function gitExec($cmd, array $params, $repo_name = null)
+	protected function gitExec($cmd, array $params)
 	{
 		assert('is_string($cmd)');
-		assert('is_null($repo_name) || is_string($repo_name)');
-
-		if ($repo_name === null) {
-			$repo_name = $this->repo_name;
-		}
 
 		// remove spaces and avoid shell piping
 		$clean = array_map(function ($i) {
@@ -209,21 +177,29 @@ class GitWrapper implements Git
 	}
 
 	/**
-	 * Get repo name
-	 *
-	 * @return string
-	 */
-	public function gitGetName()
-	{
-		return $this->repo_name;
-	}
-
-	/**
 	 * @inheritdoc
 	 */
 	public function gitGetBranches()
 	{
-		$out = $this->gitExec("git branch", array(), $this->repo_name);
+		$out = $this->gitExec("git branch", array());
 		return array_map('trim', explode("\n", trim(str_replace("*", " ", $out))));
+	}
+
+	/**
+	 * Check whether $this->path is a git repo
+	 */
+	public function gitIsGitRepo()
+	{
+		return is_dir($this->path."/.git");
+	}
+
+	/**
+	 * Check whether $url is a remote git repo
+	 *
+	 * @param string 	$url
+	 */
+	public function gitIsRemoteGitRepo($url)
+	{
+		return $this->gitExec("git ls-remote", array($url, "-h"));
 	}
 }

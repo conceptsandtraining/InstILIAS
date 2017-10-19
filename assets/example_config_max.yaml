@@ -162,6 +162,9 @@ ldap:
 #In ILIAS you can use plugins to manipulate or add something to the system. Define in this block which plugins you want to use.
 plugin:
     plugins:
+        # Add the directory, where the plugins should be installed to.
+        # The plugins will be link to there specific plugin slots
+        dir:
         #Single plugin entry.
         0:
             #Name of the ILIAS plugin.

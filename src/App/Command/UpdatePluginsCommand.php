@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use CaT\Ilse\Executor;
+use CaT\Ilse\Action;
 
 /**
  * Implementation of the updateplugins command
@@ -16,8 +16,10 @@ use CaT\Ilse\Executor;
  */
 class UpdatePluginsCommand extends BaseCommand
 {
-/**
+	/**
 	 * Configure the command with description and help text
+	 *
+	 * @return void
 	 */
 	protected function configure()
 	{
@@ -33,24 +35,23 @@ class UpdatePluginsCommand extends BaseCommand
 	 *
 	 * @param InputInterface 	$in
 	 * @param OutputInterface 	$out
+	 *
+	 * @return void
 	 */
 	protected function execute(InputInterface $in, OutputInterface $out)
 	{
+		$this->dic["aux.taskLogger"] = $this->buildTaskLogger($out);
+
+		$init_app_folder = $this->dic["action.initAppFolder"];
+		$init_app_folder->perform();
+
 		$config_names = $in->getArgument("config_names");
-		$args["config"] = $this->merge($config_names);
+		$this->dic = $this->dic["aux.configLoader"]->loadConfigToDic($this->dic, $config_names);
 
-		$this->update($args);
-		$out->writeln("\t\t\t\tDone!");
-	}
+		$update_plugins_directory = $this->dic["action.updatePluginsDirectory"];
+		$update_plugins_directory->perform();
 
-	/**
-	 * Start the update configuration process of ILIAS
-	 *
-	 * @param ["param_name" => param_value] 	$args
-	 */
-	protected function update(array $args)
-	{
-		$u = new Executor\UpdatePluginsILIAS($args['config'], $this->checker, $this->git, $this->path);
-		$u->run();
+		$update_plugins = $this->dic["action.updatePlugins"];
+		$update_plugins->perform();
 	}
 }

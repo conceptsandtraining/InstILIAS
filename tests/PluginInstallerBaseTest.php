@@ -11,6 +11,7 @@ class PluginInstallerBaseTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
 		$this->parser = new YamlConfigParser();
 		$this->yaml_string = "--- 
+dir: /home/test
 plugins:
     0:
         component_type: Services

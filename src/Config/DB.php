@@ -42,7 +42,7 @@ class DB extends Base {
 		,"galera");
 
 	protected static $valid_encodings = array(
-		"utf8_unicode_ci");
+		"utf8_general_ci");
 
 	protected static $valid_create_db = array(
 		0

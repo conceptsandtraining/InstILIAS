@@ -8,9 +8,9 @@ require_once(__DIR__."/GitTest.php");
  */
 class GitWrapperTest extends GitTest
 {
-	public function getImplementation($target_dir, $remote_url, $repo_name)
+	public function getImplementation($target_dir, $remote_url)
 	{
 		// TODO: this should not rely on connectivity to github. it could use this repo instead.
-		return new \CaT\Ilse\Aux\Git\GitWrapper($target_dir, $remote_url, $repo_name);
+		return new \CaT\Ilse\Aux\Git\GitWrapper($target_dir, $remote_url);
 	}
 }

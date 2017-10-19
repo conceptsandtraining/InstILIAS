@@ -19,7 +19,7 @@ class BuildInstallationEnvironmentTest extends PHPUnit_Framework_TestCase {
 		$git = $this->createMock(Git::class);
 		$git_factory = $this->createMock(GitFactory::class);
 		$fs = $this->createMock(Filesystem::class);
-		$db_config = new Config\DB("host", "database", "user", "password", "innodb", "utf8_unicode_ci", 1);
+		$db_config = new Config\DB("host", "database", "user", "password", "innodb", "utf8_general_ci", 1);
 		$server_config = new Config\Server("http://path", "absolute_path", "Europe/Berlin");
 		$client_config = new Config\Client("data_dir", "name", "bcrypt", 32);
 		$log_config = new Config\Log("log_path", "log_filename", "error_log_path");
@@ -120,7 +120,7 @@ class BuildInstallationEnvironmentTest extends PHPUnit_Framework_TestCase {
 		$git = $this->createMock(Git::class);
 		$git_factory = $this->createMock(GitFactory::class);
 		$fs = $this->createMock(Filesystem::class);
-		$db_config = new Config\DB("host", "database", "user", "password", "innodb", "utf8_unicode_ci", 1);
+		$db_config = new Config\DB("host", "database", "user", "password", "innodb", "utf8_general_ci", 1);
 		$server_config = new Config\Server("http://path", "absolute_path", "Europe/Berlin");
 		$client_config = new Config\Client("data_dir", "name", "bcrypt", 32);
 		$log_config = new Config\Log("log_path", "log_filename", "error_log_path");

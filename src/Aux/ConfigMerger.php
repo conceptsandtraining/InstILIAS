@@ -1,7 +1,7 @@
 <?php
 
 namespace CaT\Ilse\Aux;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Yaml as SYM;
 
 /**
  * Merge any number of config files
@@ -15,11 +15,11 @@ class ConfigMerger {
 	 */
 	public function mergeConfigs(array $configs)
 	{
-		$ret = Yaml::parse($configs[0]);
+		$ret = SYM::parse($configs[0]);
 
 		if(count($configs) > 0) {
 			for($i = 1; $i < count($configs); $i++) {
-				$new = Yaml::parse($configs[$i]);
+				$new = SYM::parse($configs[$i]);
 				$ret = $this->addMissingKeys($ret, $new);
 
 				foreach ($ret as $key => $value) {
@@ -30,9 +30,16 @@ class ConfigMerger {
 			}
 		}
 
-		return Yaml::dump($ret);
+		return SYM::dump($ret);
 	}
 
+	/**
+	 * Merge two arrays
+	 *
+	 * @param 	mixed 	$base
+	 * @param 	mixed 	$new
+	 * @return 	array
+	 */
 	protected function merge($base, $new)
 	{
 		if(is_array($base)) {
@@ -52,6 +59,13 @@ class ConfigMerger {
 		return $base;
 	}
 
+	/**
+	 * Add missing keys
+	 *
+	 * @param 	array 	$base
+	 * @param 	array 	$new
+	 * @return 	array
+	 */
 	protected function addMissingKeys(array $base, array $new)
 	{
 		$key_base = array_keys($base);

@@ -12,12 +12,11 @@ class GitFactory
 	/**
 	 * @param string    $path
 	 * @param string    $repo_url
-	 * @param string 	$name
 	 * @param bool		$verbose
 	 * @return Git
 	 */
-	public function getRepo($path, $repo_url, $name, $verbose = false)
+	public function getRepo($path, $repo_url, $verbose = false)
 	{
-		return new GitWrapper($path, $repo_url, $name, $verbose);
+		return new GitWrapper($path, $repo_url, $verbose);
 	}
 }

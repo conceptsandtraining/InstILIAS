@@ -7,6 +7,7 @@ use CaT\Ilse\Action;
 use CaT\Ilse\Aux;
 use CaT\Ilse\Aux\Git;
 use CaT\Ilse\Setup\CoreInstallerFactory;
+use CaT\Ilse\Setup\PluginAdministrationFactory;
 
 use Pimple\Container;
 use Symfony\Component\Console\Application;
@@ -19,8 +20,8 @@ class App extends Application
 	const CONFIG_REPOS_DIR	= "ilias-configs";
 	const ILSE_CONFIG		= "config.yaml";
 	const ILSE_DIR			= ".ilse";
-	const I_F_CONFIG			= "ilse_config.yaml";
-	const I_R_BRANCH			= "master";
+	const I_F_CONFIG		= "ilse_config.yaml";
+	const I_R_BRANCH		= "master";
 
 	public function __construct() {
 		parent::__construct("ilse - automatically sets ILIAS up");
@@ -90,6 +91,24 @@ class App extends Application
 						, $c["aux.taskLogger"]
 						);
 		};
+		$container["action.updatePluginsDirectory"] = function($c) {
+			$config = $c["config.ilias"];
+			return new Action\UpdatePluginsDirectory
+						( $c["aux.filesystem"]
+						, $c["aux.gitFactory"]
+						, $c["aux.taskLogger"]
+						, $c["aux.updatePluginsHelper"]
+						, $c["action.updatePlugins"]
+						);
+		};
+		$container["action.updatePlugins"] = function($c) {
+			return new Action\UpdatePlugins
+						( $c["config.ilias"]
+						, $c["setup.pluginAdministrationFactory"]
+						, $c["aux.updatePluginsHelper"]
+						, $c["aux.taskLogger"]
+						);
+		};
 
 		// Configs
 
@@ -139,11 +158,27 @@ class App extends Application
 		$container["aux.gitFactory"] = function($c) {
 			return new Git\GitFactory();
 		};
+		$container["aux.yaml"] = function($c) {
+			return new Aux\YamlParser();
+		};
+		$container["aux.updatePluginsHelper"] = function($c) {
+			$config = $c["config.ilias"];
+			return new Aux\UpdatePluginsHelper
+						( $config->server()
+						, $config->plugin()
+						, $c["aux.filesystem"]
+						, $c["aux.yaml"]
+						);
+		};
 
 		// Setup
 
 		$container["setup.coreInstallerFactory"] = function($c) {
 			return new CoreInstallerFactory();
+		};
+
+		$container["setup.pluginAdministrationFactory"] = function($c) {
+			return new PluginAdministrationFactory();
 		};
 
 		return $container;
@@ -158,46 +193,10 @@ class App extends Application
 	{
 		$dic = $this->getDIC();
 
-//		$this->add(new Command\UpdateCommand($path, $merger, $checker, $git, $repos));
 		$this->add(new Command\DeleteCommand($dic));
-//		$this->add(new Command\UpdatePluginsCommand($path, $merger, $checker, $git, $repos));
-//		$this->add(new Command\ReinstallCommand($path, $merger, $checker, $git, $repos));
+		$this->add(new Command\UpdatePluginsCommand($dic));
 		$this->add(new Command\InstallCommand($dic));
-//		$this->add(new Command\ConfigCommand($path, $merger, $checker, $git, $repos));
 		$this->add(new Command\ExampleConfigCommand($dic));
-	}
-
-	/**
-	 * Initialize the config repo in ~/.ilias-installer/config
-	 *
-	 * @param string 				$path
-	 * @param Git\Git 		$gw
-	 * @param Interfaces\Parser 	$parser
-	 * @param string 				$repos
-	 * @param GitExecutor 			$ge
-	 */
-	protected function initConfigRepo($path, Git\Git $gw, Interfaces\Parser $parser, $repos, GitExecutor $ge)
-	{
-		$name = "";
-		$path = $path->getHomeDir() . "/" . self::I_P_GLOBAL_CONFIG;
-
-		foreach ($repos as $repo)
-		{
-			$dir = $this->getUniqueDirName($path, $repo);
-			if(!is_dir($dir))
-			{
-				mkdir($dir, 0755, true);
-			}
-			else
-			{
-				$name = basename($repo, '.git');
-			}
-			$ge->cloneGitTo($repo,
-							self::I_R_BRANCH,
-							$dir,
-							$name
-							);
-		}
 	}
 
 	/**

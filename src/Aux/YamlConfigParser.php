@@ -2,7 +2,7 @@
 /* Copyright (c) 2016 Stefan Hecken <stefan.hecken@concepts-and-training.de>, Extended GPL, see LICENSE */
 
 namespace CaT\Ilse\Aux;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Yaml as SYM;
 
 /**
  * implementation of a parser
@@ -22,7 +22,7 @@ class YamlConfigParser implements ConfigParser {
 			throw new \LogicException("Class '$class' does not exists");
 		}
 
-		$yaml = Yaml::parse($string);
+		$yaml = SYM::parse($string);
 
 		return $this->createConfig($yaml, $class);
 	}
@@ -122,7 +122,7 @@ class YamlConfigParser implements ConfigParser {
 
 		try
 		{
-			$yaml_array = Yaml::parse(file_get_contents($path));
+			$yaml_array = SYM::parse(file_get_contents($path));
 		}
 		catch (ParseException $e)
 		{
@@ -140,6 +140,6 @@ class YamlConfigParser implements ConfigParser {
 	 */
 	public function arr2yaml(array $data)
 	{
-		return Yaml::dump($data);
+		return SYM::dump($data);
 	}
 }

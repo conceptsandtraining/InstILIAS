@@ -9,7 +9,7 @@ use CaT\Ilse\Aux\Filesystem;
 use CaT\Ilse\Aux\TaskLogger;
 
 /**
- * Initialize the folder of the app if it doesn't yet exist.
+ * Initialize the folder of the ilse if it doesn't yet exist.
  */
 class InitAppFolder implements Action
 {

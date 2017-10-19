@@ -300,6 +300,11 @@ class CoreInstaller52 implements CoreInstaller {
 		return true;
 	}
 
+	/**
+	 * Get the ilias installation data from ini file.
+	 *
+	 * @return array
+	 */
 	protected function getIliasIniData() {
 		$ret = array();
 
@@ -320,6 +325,11 @@ class CoreInstaller52 implements CoreInstaller {
 		return $ret;
 	}
 
+	/**
+	 * Get the client installation data from ini file.
+	 *
+	 * @return array
+	 */
 	protected function getClientIniData() {
 		$ret = array();
 		$ret["datadir_path"] = $this->config->client()->dataDir();

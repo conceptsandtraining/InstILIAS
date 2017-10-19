@@ -65,6 +65,14 @@ interface Filesystem {
 	public function purgeDirectory($path);
 
 	/**
+	 * Get subdirectories of a directory
+	 *
+	 * @param 	string 	$path
+	 * @return 	string[]
+	 */
+	public function getSubdirectories($path);
+
+	/**
 	 * Change access permissions.
 	 *
 	 * ATTENTION: second parameter is an integer, i.e. use 0755 e.g.
@@ -98,4 +106,21 @@ interface Filesystem {
 	 * @return	void
 	 */
 	public function write($path, $content);
+
+	/**
+	 * Link a file or folder
+	 *
+	 * @param 	string 	$target 	existing file or folder
+	 * @param 	string 	$link 		paht + name of the link
+	 * @return 	bool
+	 */
+	public function symlink($target, $link);
+
+	/**
+	 * Check for symlink
+	 *
+	 * @param 	string 	$filename
+	 * @return 	bool
+	 */
+	public function isLink($filename);
 }
