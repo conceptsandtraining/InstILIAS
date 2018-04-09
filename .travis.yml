@@ -12,7 +12,7 @@ install:
     - "git checkout master"
     - "git checkout $MY_CURRENT_COMMIT"
 script:
-    - "php ./vendor/bin/security-checker security:check"
+    - /vendor/bin/security-checker security:check
     - ./run_tests.sh
 before_deploy:
     - "rm -rf vendor"
